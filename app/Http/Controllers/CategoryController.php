@@ -17,7 +17,7 @@ class CategoryController extends Controller
         $kategori = new Category();
         $kategori->name = $request->name;
         if ($kategori->save()) {
-            return redirect()->route('dashboard');
+            return redirect()->route('productroom');
         } else {
             return back()->withErrors('Gagal menyimpan Kategori');
         }

@@ -95,7 +95,7 @@
                                 </svg>
                             </button>
                         </div>
-                        <form method="POST" action="{{ route('addCategory') }}" class="space-y-4">
+                        <form method="POST" action="{{ route('productroom.add') }}" class="space-y-4">
                             @csrf
                             <h3 class="text-xl font-bold text-amber-400">Tambah Kategori</h3>
                             <div>

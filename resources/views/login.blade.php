@@ -28,8 +28,17 @@
                 </div>
 
                 <!-- LOGIN FORM -->
-                <form x-show="isLogin" method="POST" action="{{ route('login') }}" class="space-y-5">
+                <form x-show="isLogin" method="POST" action="{{ route('admin.login.process') }}" class="space-y-5">
                     @csrf
+                    @if($errors->any())
+                    <div class="text-center text-red-600 alert alert-danger">
+                        <ul>
+                            @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
                         <input type="email" name="email" required x-model="email" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-600 focus:outline-none" placeholder="you@example.com" />

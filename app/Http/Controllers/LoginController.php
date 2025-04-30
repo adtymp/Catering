@@ -5,15 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Rules\CekLogin;
+use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {
-    // Function Login
+    function index()
+    {
+        return view('login');
+    }
     function login(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required|min:8'
+            'password' => ['required', 'min:8', new CekLogin($request)]
         ]);
 
         $credentials = [
@@ -22,11 +27,17 @@ class LoginController extends Controller
         ];
 
         if (Auth::attempt($credentials)) {
-            // Login berhasil, redirect ke halaman dashboard
-            return redirect()->intended('dashboard');
-        } else {
-            // Login gagal
-            return redirect()->back()->withErrors(['email' => 'Username dan password tidak sesuai'])->withInput();
+            $user = Auth::user();
+            Session::put('loginStatus', true);
+
+            if ($user->role == "admin") {
+                return redirect()->intended(route('admindashboard'));
+            } elseif ($user->role == "customer") {
+                return redirect()->intended('/');
+            } else {
+                Auth::logout();
+                return redirect()->back()->withErrors(['email' => 'Maaf, Ulangi inputan'])->withInput();
+            }
         }
     }
 
@@ -44,10 +55,16 @@ class LoginController extends Controller
         $user->name = $request->name;
         $user->password = bcrypt($request->password);
         if ($user->save()) {
-            return redirect()->route('dashboard');
-        }
-        else{
+            return redirect()->route('login');
+        } else {
             return back()->withErrors('Gagal menyimpan User');
         }
+    }
+
+    function logout()
+    {
+        Session::forget('loginStatus');
+        Auth::logout();
+        return redirect('login');
     }
 }
