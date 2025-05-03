@@ -30,9 +30,9 @@ class LoginController extends Controller
             $user = Auth::user();
             Session::put('loginStatus', true);
 
-            if ($user->role == "admin") {
+            if ($user->hasRole('admin')) {
                 return redirect()->intended(route('admindashboard'));
-            } elseif ($user->role == "customer") {
+            } elseif ($user->hasRole('customer')) {
                 return redirect()->intended('/');
             } else {
                 Auth::logout();
@@ -55,6 +55,7 @@ class LoginController extends Controller
         $user->name = $request->name;
         $user->password = bcrypt($request->password);
         if ($user->save()) {
+            $user->assignRole('customer');
             return redirect()->route('login');
         } else {
             return back()->withErrors('Gagal menyimpan User');

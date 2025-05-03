@@ -19,7 +19,7 @@ class LoggedIn
     {
         $loginStatus = Session::get('loginStatus');
         $user = Auth::user();
-        if($loginStatus == FALSE || !$loginStatus && $user->role !== 'admin'){
+        if($loginStatus == FALSE || !$loginStatus){
             return redirect()->route('login');
         }
         return $next($request);

@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    function index(){
-        return view('admindashboard');
+    function index()
+    {
+        $categories = Category::all();
+        return view('welcome', compact('categories'));
     }
 }

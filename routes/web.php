@@ -11,9 +11,7 @@ use Illuminate\Auth\Events\Logout;
 use Illuminate\Support\Facades\Route;
 use Psy\TabCompletion\Matcher\FunctionsMatcher;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('dashboard');
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::post('/register', [LoginController::class, 'regis'])->name('register');
 
@@ -23,13 +21,13 @@ Route::middleware(AdminMiddleware::class)->group(function () {
 });
 
 Route::middleware(LoggedIn::class)->prefix('admin')->group(function () {
-    Route::get('/admindashboard', [DashboardController::class, 'index'])->name('admindashboard');
+    Route::get('/admindashboard', [DashboardController::class, 'index'])->name('admindashboard')->middleware('role:admin');
 
-    Route::get('/product/view', [ProductController::class, 'index'])->name('productroom');
+    Route::get('/product/view', [ProductController::class, 'index'])->name('productroom')->middleware('role:admin');
 
-    Route::post('/product/add', [CategoryController::class, 'addCategory'])->name('productroom.add');
+    Route::post('/product/add', [CategoryController::class, 'addCategory'])->name('productroom.add')->middleware('role:admin');
 
-    Route::get('/product', [CategoryController::class, 'viewCategory'])->name('productroom.view');
+    Route::get('/product', [CategoryController::class, 'viewCategory'])->name('productroom.view')->middleware('role:admin');
 });
 
 Route::get('/cart', function () {

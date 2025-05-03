@@ -1,3 +1,4 @@
+@props(['categories'])
 <div class="bg-yellow-100" x-data="{ isOpen: false }">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2">
         <div class="flex h-16 items-center justify-between">
@@ -7,15 +8,40 @@
                         <div class="text-red-700 text-3xl font-bold">LOGO</div>
                     </a>
                 </div>
+                <!-- resources/views/components/navbar.blade.php -->
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4">
-                        <!-- Current: "bg-gray-900 text-white", Default: "text-white hover:bg-gray-700 hover:text-white" -->
-                        <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-amber-800 hover:text-yellow-100 hover:bg-amber-800">Menu</a>
+                        <div x-data="{ menuOpen: false }" class="relative">
+                            <button
+                                @click="menuOpen = !menuOpen"
+                                class="rounded-md px-3 py-2 text-sm font-medium text-amber-800 hover:text-yellow-100 hover:bg-amber-800">
+                                Menu
+                            </button>
+
+                            <div
+                                x-show="menuOpen"
+                                @click.away="menuOpen = false"
+                                x-transition
+                                class="absolute z-10 mt-2 w-56 bg-white rounded-md shadow-lg ring-1 ring-black/5">
+                                <ul class="py-2">
+                                    @foreach($categories as $category)
+                                    <li class="flex items-center px-4 py-2 hover:bg-amber-100">
+                                        <img src="{{ asset('storage/' . $category->icon) }}" alt="{{ $category->name }}" class="w-6 h-6 object-cover mr-2 rounded">
+                                        <span class="text-gray-800 text-sm">{{ $category->name }}</span>
+                                    </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+
+
+                        <!-- Menu lainnya -->
                         <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-amber-800 hover:text-yellow-100 hover:bg-amber-800">Cara Pesan</a>
                         <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-amber-800 hover:text-yellow-100 hover:bg-amber-800">Ulasan</a>
                         <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-amber-800 hover:text-yellow-100 hover:bg-amber-800">Tentang Kami</a>
                     </div>
                 </div>
+
             </div>
             <div class="hidden md:block">
                 <div class="ml-4 flex items-center md:ml-6">

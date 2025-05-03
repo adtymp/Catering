@@ -14,12 +14,22 @@
     <!--main-->
     <div class="transition-all duration-300 p-4 pt-20"
         :class="sidebarOpen ? 'pl-52' : 'pl-12'" class="h-screen absolute top-0 ml-48 p-2 w-full bg-gray-100">
+        @if($errors->any())
+        <div class="text-center text-red-600 alert alert-danger">
+            <ul>
+                @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
         <h1>Ini adalah Halaman Produk</h1>
 
         <!-- Container besar -->
         <div class="flex flex-col md:flex-row gap-6 p-4">
+
             <!-- Postingan -->
-            <div  x-data="{ postOpen: false }" class="border-2 w-full md:w-1/2 p-4 rounded-md bg-white shadow-md">
+            <div x-data="{ postOpen: false }" class="border-2 w-full md:w-1/2 p-4 rounded-md bg-white shadow-md">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-lg font-semibold text-gray-700">Postingan</h2>
                     <button @click="postOpen = true" class="bg-amber-400 hover:bg-amber-500 text-white rounded-lg px-4 py-2">
@@ -78,7 +88,7 @@
 
             <!-- Kategori -->
             <div x-data="{ kategoriOpen: false }" class="border-2 w-full md:w-1/2 p-4 rounded-md bg-white shadow-md">
-                <div  class="flex justify-between items-center mb-4">
+                <div class="flex justify-between items-center mb-4">
                     <h2 class="text-lg font-semibold text-gray-700">Kategori</h2>
                     <button @click="kategoriOpen = true" class="bg-amber-400 hover:bg-amber-500 text-white rounded-lg px-4 py-2">
                         Tambah Kategori
@@ -95,9 +105,45 @@
                                 </svg>
                             </button>
                         </div>
-                        <form method="POST" action="{{ route('productroom.add') }}" class="space-y-4">
+                        <form method="POST" enctype="multipart/form-data" action="{{ route('productroom.add') }}" class="space-y-4">
                             @csrf
                             <h3 class="text-xl font-bold text-amber-400">Tambah Kategori</h3>
+                            <div class="flex flex-col flex-grow mb-3">
+                                <div
+                                    x-data="{ files: [], removeFile(index) { this.files.splice(index, 1); } }"
+                                    class="block w-full py-2 px-3 bg-white border-2 border-gray-300 rounded-md relative">
+
+                                    <input name="icon"
+                                        type="file" accept="image/*"
+                                        class="absolute inset-0 z-50 w-full h-full opacity-0 cursor-pointer"
+                                        @change="files = Array.from($event.target.files)">
+
+                                    <template x-if="files.length > 0">
+                                        <div class="grid grid-cols-2 gap-4 mt-4">
+                                            <template x-for="(file, index) in files" :key="index">
+                                                <div class="relative group border rounded p-2">
+                                                    <img :src="URL.createObjectURL(file)" class="w-full h-32 object-cover rounded">
+                                                    <button type="button"
+                                                        @click="removeFile(index)"
+                                                        class="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full p-1 opacity-80 hover:opacity-100">
+                                                        &times;
+                                                    </button>
+                                                    <p class="text-xs mt-1 truncate" x-text="file.name"></p>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+
+                                    <template x-if="files.length === 0">
+                                        <div class="flex flex-col items-center justify-center py-10 text-center text-gray-600">
+                                            <i class="fas fa-cloud-upload-alt fa-3x mb-2"></i>
+                                            <p>Drag and drop or click to select image files</p>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+
+
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Nama Kategori</label>
                                 <input type="text" name="name" class="w-full mt-1 p-2 border rounded-lg" required>
@@ -113,15 +159,17 @@
                 <table class="w-full mt-4 table-auto">
                     <thead>
                         <tr class="bg-gray-100">
-                            <th class="px-4 py-2">No</th>
+                            <th class="px-4 py-2">Icon</th>
                             <th class="px-4 py-2">Nama Kategori</th>
                             <th class="px-4 py-2">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($categories as $index => $category)
+                        @foreach($categories as $category)
                         <tr class="border-t">
-                            <td class="px-4 py-2">{{ $index + 1 }}</td>
+                            <td class="px-4 py-2 w-3 h-3">
+                                <img src="{{ asset('storage/' . $category->icon) }}" alt="{{ $category->name }}">
+                            </td>
                             <td class="px-4 py-2">{{ $category->name }}</td>
                             <td class="px-4 py-2 text-blue-500"><a href="#">Edit</a></td>
                         </tr>

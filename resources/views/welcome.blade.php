@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    <x-navbar></x-navbar>
+    <x-navbar :categories="$categories" />
     <!--SlideShow-->
     <div>
         <div class="p-16">
@@ -430,6 +430,9 @@
         </div>
     </footer>
     <!--footer-->
+
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
 </body>
 
 </html>

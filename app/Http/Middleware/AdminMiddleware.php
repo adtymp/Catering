@@ -20,9 +20,9 @@ class AdminMiddleware
         if (Auth::check()) {
             $user = Auth::user();
 
-            if ($user->role === 'admin') {
+            if ($user->hasRole('admin')) {
                 return redirect()->route('admindashboard');
-            } elseif ($user->role === 'customer') {
+            } elseif ($user->hasrole('customer')) {
                 return redirect('/');
             }
         }
