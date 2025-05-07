@@ -84,8 +84,11 @@
                             <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1">Settings</a>
 
                             <!-- Logout -->
-                            <form method="POST" action="#" class="block">
-                                <button type="submit" class="block px-4 py-2 text-sm text-gray-700 w-full text-left" role="menuitem" tabindex="-1">Sign out</button>
+                            <form method="POST" action="{{ route('logout') }}" class="block">
+                                @csrf
+                                <button type="submit" class="block px-4 py-2 text-sm text-gray-700 w-full text-left" role="menuitem" tabindex="-1">
+                                    Sign out
+                                </button>
                             </form>
                         </div>
                     </div>

@@ -27,16 +27,45 @@ class CategoryController extends Controller
         $kategori->icon = $image;
 
         if ($kategori->save()) {
-            return redirect()->route('productroom.view');
+            return redirect()->route('productroom');
         } else {
             return back()->withErrors('Gagal menyimpan Kategori');
         }
     }
 
-
-    function viewCategory()
+    public function editCategory($id)
     {
-        $categories = Category::all();
-        return view('productroom', compact('categories'));
+        return redirect()->route('productroom')->with('editCategoryId', $id);
+    }
+
+    public function updateCategory(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $kategori = Category::findOrFail($id);
+        $kategori->name = $request->name;
+
+        if ($request->hasFile('icon')) {
+            $originalName = time() . '_' . $request->file('icon')->getClientOriginalName();
+            $image = $request->file('icon')->storeAs('categories', $originalName, 'public');
+            $kategori->icon = $image;
+        }
+        
+
+        if ($kategori->save()) {
+            return redirect()->route('productroom');
+        } else {
+            return back()->withErrors('Gagal menyimpan Kategori');
+        }
+    }
+
+    public function deleteCategory($id){
+        $kategori = Category::find($id);
+        $kategori->delete();
+
+        return redirect()->route('productroom');
     }
 }

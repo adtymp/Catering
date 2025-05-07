@@ -47,9 +47,6 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
                         <div class="relative">
                             <input :type="showPassword ? 'text' : 'password'" name="password" required x-model="password" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-600 focus:outline-none" placeholder="••••••••" />
-                            <button type="button" class="absolute right-3 top-3 text-gray-400" @click="showPassword = !showPassword">
-                                <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
-                            </button>
                         </div>
                     </div>
                     <button type="submit" class="w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700">Sign In</button>

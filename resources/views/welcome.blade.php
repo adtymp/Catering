@@ -15,64 +15,72 @@
 <body>
     <x-navbar :categories="$categories" />
     <!--SlideShow-->
-    <div>
-        <div class="p-16">
-            <div class="max-w-5xl mx-auto relative" x-data="{
-                    activeSlide: 1,
-                    slides: [
-                        {id: 1, tittle: 'Gambar 1', body:'Halo Bolo'},
-                        {id: 2, tittle: 'Gambar 2', body:'Halo Nomer 2'},
-                        {id: 3, tittle: 'Gambar 3', body:'Halo Nomer 3'},
-                        {id: 4, tittle: 'Gambar 4', body:'Halo Nomer 4'},
-                        {id: 5, tittle: 'Gambar 5', body:'Halo Nomer 5'},
-                        ],
-                        loop(){
-                            setInterval(() => this.activeSlide = this.activeSlide === 5 ? 1 : this.activeSlide + 1, 1500)
-                        }
-                    }"
-                x-init="loop">
+    <div class="pb-10 max-w-6xl mx-auto relative overflow-hidden"
+        x-data="{
+        activeSlide: 1,
+        slides: {{ Js::from($banners->map(fn($b, $i) => [
+            'id' => $i + 1,
+            'tittle' => $b->tittle,
+            'image' => asset('storage/' . $b->image)
+        ])->values()) }},
+        loop() {
+            setInterval(() => {
+                this.activeSlide = this.activeSlide === this.slides.length ? 1 : this.activeSlide + 1;
+            }, 3000);
+        }
+    }"
+        x-init="loop">
+
+        <!-- Slide container with slide transition effect -->
+        <div class="relative w-full h-72 sm:h-96 overflow-hidden">
+            <template x-for="(slide, index) in slides" :key="slide.id">
+                <div
+                    x-show="activeSlide === slide.id"
+                    x-transition:enter="transition-transform duration-1000 ease-out"
+                    x-transition:enter-start="translate-x-full"
+                    x-transition:enter-end="translate-x-0"
+                    x-transition:leave="transition-transform duration-500 ease-in"
+                    x-transition:leave-start="translate-x-0"
+                    x-transition:leave-end="-translate-x-full"
+                    class="absolute inset-0">
+                    <img :src="slide.image" alt=""
+                        class="w-full h-full object-cover rounded-md">
+                </div>
+            </template>
+
+            <!-- Indicator dots inside image, bottom center -->
+            <div class="absolute bottom-4 left-0 right-0 flex justify-center items-center space-x-2 z-10">
                 <template x-for="slide in slides" :key="slide.id">
-                    <div x-show="activeSlide === slide.id" class="p-20 h-96 flex items-center bg-slate-500 text-white">
-                        <div>
-                            <h2 class="font-bold text-2xl" x-text="slide.tittle"></h2>
-                            <p class="text-base" x-text="slide.body"></p>
-                        </div>
-                    </div>
+                    <button class="w-3 h-3 rounded-full"
+                        :class="activeSlide === slide.id ? 'bg-white' : 'bg-gray-400'"
+                        @click="activeSlide = slide.id">
+                    </button>
                 </template>
-
-                <div class="absolute inset-0 flex">
-                    <div class="flex items-center justify-start w-1/2">
-                        <button @click="activeSlide = activeSlide === 1 ? slides.length : activeSlide -1"
-                            class="bg-slate-100 text-slate-500 hover:bg-red-700 hover:text-white transition font-bold rounded-full w-12 h-12 shadow flex justify-center items-center -ml-16">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-                            </svg>
-                        </button>
-                    </div>
-
-                    <div class="flex items-center justify-end w-1/2">
-                        <button @click="activeSlide = activeSlide === slides.length ? 1 : activeSlide +1"
-                            class="bg-slate-100 text-slate-500 hover:bg-red-700 hover:text-white transition font-bold rounded-full w-12 h-12 shadow flex justify-center items-center -mr-16">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                <div class="absolute w-full flex items-center justify-center px-4">
-                    <template x-for="slide in slides" :key="slide.id">
-                        <button class="flex-1 w-4 h-2 mt-4 mx-2 mb-2 overflow-hidden rounded-full transition-colors duration-200 ease-out hover:bg-red-900 hover:shadow-lg"
-                            :class="{
-                                'bg-red-700' : activeSlide === slide.id,
-                                'bg-slate-300' : activeSlide !== slide.id,
-                            }"
-                            @click="activeSlide = slide.id"></button>
-                    </template>
-                </div>
             </div>
         </div>
+
+        <!-- Navigation arrows -->
+        <div class="absolute inset-0 flex items-center justify-between px-4">
+            <button @click="activeSlide = activeSlide === 1 ? slides.length : activeSlide - 1"
+                class="text-gray-700 hover:bg-white/70 hover:text-white transition rounded-full w-10 h-10 flex items-center justify-center shadow">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M15.75 19.5L8.25 12l7.5-7.5" />
+                </svg>
+            </button>
+
+            <button @click="activeSlide = activeSlide === slides.length ? 1 : activeSlide + 1"
+                class="text-gray-700 hover:bg-white/70 hover:text-white transition rounded-full w-10 h-10 flex items-center justify-center shadow">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                </svg>
+            </button>
+        </div>
     </div>
-    <!--SlideShow-->
+
     <!--search-->
     <div class="text-center">
         <div class="p-4">
@@ -429,7 +437,6 @@
             @2024 Recommended
         </div>
     </footer>
-    <!--footer-->
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
