@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    <x-navbar :categories="$categories" />
+    <x-navbar :categories="$categories" :cartCount="$cartCount"/>
     <x-search></x-search>
     <div class="items-center justify-center grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 py-1 pt-4">
     @foreach ($products as $product)

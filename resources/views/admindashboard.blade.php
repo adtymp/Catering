@@ -84,16 +84,13 @@
                                                 stroke-width="2"
                                                 d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
                                         </svg>
-                                        <div
-                                            class="bg-yellow-500 rounded-full h-6 px-2 flex justify-items-center text-white font-semibold text-sm">
-                                            <span class="flex items-center">30%</span>
-                                        </div>
                                     </div>
                                     <div class="ml-2 w-full flex-1">
                                         <div>
-                                            <div class="mt-3 text-3xl font-bold leading-8">4.510</div>
-
-                                            <div class="mt-1 text-base text-gray-600">Item Sales</div>
+                                            @if ($product > 0)
+                                                <div class="mt-3 text-3xl font-bold leading-8">{{ $product }}</div>
+                                            @endif
+                                            <div class="mt-1 text-base text-gray-600">Total Produk</div>
                                         </div>
                                     </div>
                                 </div>

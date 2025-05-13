@@ -6,6 +6,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\LoggedIn;
@@ -20,9 +21,20 @@ Route::get('/', [DashboardController::class, 'index'])->name('welcome');
 
 Route::get('/search', [DashboardController::class, 'filterSearch'])->name('filterSearch');
 
-Route::get('/detailProduct/{id}', [DashboardController::class, 'detailProduct'])->name('detailProduct');
-
 Route::post('/register', [LoginController::class, 'regis'])->name('register');
+
+Route::get('/detailProduct/{slug}', [DashboardController::class, 'detailProduct'])->name('detailproduct');
+
+
+Route::middleware(LoggedIn::class)->group(function () {
+    Route::post('/detailProduct/addCart', [CartController::class, 'addCart'])->name('addCart')->middleware('role:customer');
+
+    Route::get('/payment',[ PaymentController::class, 'index'])->name('payment');
+
+    Route::post('/payment/checkout', [PaymentController::class, 'checkOut'])->name('payment.checkout');
+});
+
+Route::get('/cart', [CartController::class, 'index'])->name('cart');
 
 Route::middleware(AdminMiddleware::class)->group(function () {
     Route::get('/login', [LoginController::class, 'index'])->name('login');
@@ -63,7 +75,5 @@ Route::middleware(LoggedIn::class)->prefix('admin')->group(function () {
 
     Route::post('/product/deleteProduct/{id}', [ProductController::class, 'deleteProduct'])->name('productroom.product.delete')->middleware('role:admin');
 });
-
-Route::get('/cart', [CartController::class, 'index'])->name('cart');
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Banner;
+use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -14,16 +16,18 @@ class DashboardController extends Controller
         $categories = Category::all();
         $banners = Banner::all();
         $products = Product::with('category')->get();
+        $cartCount = Auth::check() ? Cart::where('user_id', Auth::id())->count() : 0;
 
-        return view('welcome', compact('categories', 'banners', 'products'));
+        return view('welcome', compact('categories', 'banners', 'products', 'cartCount'));
     }
 
     public function filterSearch(Request $request)
     {
         $categories = Category::all();
         $banners    = Banner::all();
-
+        $cartCount = Auth::check() ? Cart::where('user_id', Auth::id())->count() : 0;
         $productsQuery = Product::with('category');
+        
 
         if ($request->filled('query')) {
             $productsQuery->where('name', 'like', '%' . $request->query('query') . '%');
@@ -31,7 +35,7 @@ class DashboardController extends Controller
 
         switch ($request->query('filter')) {
             case 'under-15000':
-                $productsQuery->where('price', '<', 15000);
+                $productsQuery->where('price', '<=', 15000);
                 break;
 
             case '15-25k':
@@ -46,12 +50,13 @@ class DashboardController extends Controller
 
         $products = $productsQuery->get();
 
-        return view('showall', compact('categories', 'banners', 'products'));
+        return view('showall', compact('categories', 'banners', 'products', 'cartCount'));
     }
-    function detailProduct($id){
+    function detailProduct($slug){
         $categories = Category::all();
-        $product = product::find($id);
+        $product = product::where('slug', $slug)->firstOrFail();
+        $cartCount = Auth::check() ? Cart::where('user_id', Auth::id())->count() : 0;
 
-        return view('detailproduct', compact('categories', 'product'));
+        return view('detailproduct', compact('categories', 'product', 'cartCount'));
     }
 }

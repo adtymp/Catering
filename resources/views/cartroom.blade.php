@@ -12,122 +12,90 @@
     <title>CartRoom</title>
 </head>
 
-<body class="min-h-screen">
+<body>
+    <x-navbar :categories="$categories" :cartCount="$cartCount" />
+    <a href="{{ route('welcome')}}">
+        <button class="px-5 py-3 items-center ml-5 rounded-lg flex hover:bg-gray-200">
+            <svg xmlns="http://www.w3.org/2000/svg" height="25" width="25" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+                <path fill="#000000" d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
+            </svg>
+            <h2 class="ml-5 text-3xl">Back</h2>
+        </button>
+    </a>
+    <form id="checkout-form" action="{{ route('payment.checkout') }}" method="POST">
+        @csrf
+        <div class="p-6 max-w-4xl mx-auto space-y-4 mb-32">
+            <h1 class="text-3xl font-bold text-center mb-6">KERANJANGMU</h1>
 
-    <x-navbar :categories="$categories" />
+            @auth
+            @forelse ($carts as $cart)
+            <div class="bg-white rounded-lg shadow-md p-4 flex gap-4 items-center">
+                <input type="checkbox" name="cart_items[]" value="{{ $cart->id }}" class="mt-2 select-cart-item">
+                <img src="{{ asset('storage/' . $cart->product->image) }}" alt="Product" class="w-28 h-28 object-cover rounded-md">
+                <div class="flex-1">
+                    <h2 class="text-lg font-semibold">{{ $cart->product->name }}</h2>
+                    <p class="text-sm text-gray-500 line-clamp-2">{{ $cart->product->deskripsi }}</p>
 
-    <div class="p-6 max-w-4xl mx-auto space-y-4 mb-32">
-        <h1 class="text-3xl font-bold text-center mb-6">KERANJANGMU</h1>
-
-        <!-- forelse (cartItems as item) -->
-        <div class="bg-white rounded-lg shadow-md p-4 flex gap-4">
-            <img src="" alt="Product" class="w-28 h-28 object-cover rounded-md">
-            <!-- asset('storage/' . itemproductimage) -->
-            <div class="flex-1">
-                <h2 class="text-lg font-semibold">item->product->name</h2>
-                <p class="text-sm text-gray-500 line-clamp-2">item->product->description</p>
-
-                <div class="flex items-center mt-2 space-x-2">
-                    <button class="bg-gray-200 px-2 py-1 rounded">-</button>
-                    <span>item->quantity</span>
-                    <button class="bg-gray-200 px-2 py-1 rounded">+</button>
+                    <div class="flex items-center mt-2 space-x-2">
+                        <button class="bg-gray-200 px-2 py-1 rounded">-</button>
+                        <span>{{ $cart->quantity }}</span>
+                        <button class="bg-gray-200 px-2 py-1 rounded">+</button>
+                    </div>
                 </div>
 
-                <div class="mt-2 font-semibold text-amber-600">
-                    <!-- Rp  number_format($item->product->price * $item->quantity, 0, ',', '.') -->
-                </div>
-            </div>
-
-            <form action="" method="POST">
-                <!--  route('cart.remove', itemid)  -->
-                <!-- csrf -->
-                <!-- method('DELETE') -->
+                <!-- Hapus tombol -->
+                <!-- <form> DI SINI HARUS DIHAPUS -->
                 <button class="text-red-500 hover:text-red-700">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M3 6h18M9 6V4h6v2m-3 0v14M5 6l1 14h12l1-14" />
                     </svg>
                 </button>
-            </form>
-        </div>
-        <div class="bg-white rounded-lg shadow-md p-4 flex gap-4">
-            <img src="" alt="Product" class="w-28 h-28 object-cover rounded-md">
-            <!-- asset('storage/' . itemproductimage) -->
-            <div class="flex-1">
-                <h2 class="text-lg font-semibold">item->product->name</h2>
-                <p class="text-sm text-gray-500 line-clamp-2">item->product->description</p>
-
-                <div class="flex items-center mt-2 space-x-2">
-                    <button class="bg-gray-200 px-2 py-1 rounded">-</button>
-                    <span>item->quantity</span>
-                    <button class="bg-gray-200 px-2 py-1 rounded">+</button>
-                </div>
-
-                <div class="mt-2 font-semibold text-amber-600">
-                    <!-- Rp  number_format($item->product->price * $item->quantity, 0, ',', '.') -->
-                </div>
+                <!-- </form> DI SINI HARUS DIHAPUS -->
             </div>
+            @empty
+            <p class="text-center text-gray-500">Keranjangmu masih kosong.</p>
+            @endforelse
+            @endauth
 
-            <form action="" method="POST">
-                <!--  route('cart.remove', itemid)  -->
-                <!-- csrf -->
-                <!-- method('DELETE') -->
-                <button class="text-red-500 hover:text-red-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M3 6h18M9 6V4h6v2m-3 0v14M5 6l1 14h12l1-14" />
-                    </svg>
-                </button>
-            </form>
+            @guest
+            <p class="text-center text-gray-500">Login untuk melihat halaman ini.</p>
+            @endguest
         </div>
-        <div class="bg-white rounded-lg shadow-md p-4 flex gap-4">
-            <img src="" alt="Product" class="w-28 h-28 object-cover rounded-md">
-            <!-- asset('storage/' . itemproductimage) -->
-            <div class="flex-1">
-                <h2 class="text-lg font-semibold">item->product->name</h2>
-                <p class="text-sm text-gray-500 line-clamp-2">item->product->description</p>
 
-                <div class="flex items-center mt-2 space-x-2">
-                    <button class="bg-gray-200 px-2 py-1 rounded">-</button>
-                    <span>item->quantity</span>
-                    <button class="bg-gray-200 px-2 py-1 rounded">+</button>
+        <!-- FOOTER KERANJANG -->
+        <div class="fixed bottom-0 w-full bg-white shadow-lg border-t border-gray-200 z-50">
+            <div class="max-w-4xl mx-auto flex items-center justify-between">
+                <div class="p-4">
+                    <p class="text-gray-600 text-sm">Total Harga</p>
+                    <h2 class="text-xl font-bold text-gray-900" id="totalHarga">Rp 0</h2>
                 </div>
-
-                <div class="mt-2 font-semibold text-amber-600">
-                    <!-- Rp  number_format($item->product->price * $item->quantity, 0, ',', '.') -->
-                </div>
-            </div>
-
-            <form action="" method="POST">
-            <!--  route('cart.remove', itemid)  -->
-                <!-- csrf -->
-                <!-- method('DELETE') -->
-                <button class="text-red-500 hover:text-red-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M3 6h18M9 6V4h6v2m-3 0v14M5 6l1 14h12l1-14"/>
-                    </svg>
-                </button>
-            </form>
-        </div>
-        <!-- empty -->
-        <p class="text-center text-gray-500">Keranjangmu masih kosong.</p>
-        <!-- endforelse -->
-    </div>
-
-    <!-- Footer Keranjang (Total Harga dan Tombol Bayar) -->
-    <div class="fixed bottom-0 w-full bg-white shadow-lg border-t border-gray-200 z-50">
-        <div class="max-w-4xl mx-auto flex items-center justify-between">
-            <div class="p-4">
-                <p class="text-gray-600 text-sm">Total Harga</p>
-                <h2 class="text-xl font-bold text-gray-900">Rp number_format(total, 0, ',', '.') </h2>
-            </div>
-            <form action="" method="POST">
-                <!--  route('checkout')  -->
-                <!-- csrf -->
-                <button class="bg-amber-500 hover:bg-amber-600 text-white font-semibold px-6 py-3 rounded-lg transition">
+                <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-white font-semibold px-6 py-3 rounded-lg transition">
                     Bayar Sekarang
                 </button>
-            </form>
+            </div>
         </div>
-    </div>
+    </form>
+
+    <script>
+        const checkboxes = document.querySelectorAll('.select-cart-item');
+        const totalDisplay = document.getElementById('totalHarga');
+
+        const prices = @json($carts -> mapWithKeys(fn($c) => [$c -> id => $c -> product -> price * $c -> quantity]));
+
+        function updateTotal() {
+            let total = 0;
+            checkboxes.forEach(cb => {
+                if (cb.checked) {
+                    total += prices[cb.value];
+                }
+            });
+
+            totalDisplay.textContent = 'Rp ' + total.toLocaleString('id-ID');
+        }
+
+        checkboxes.forEach(cb => cb.addEventListener('change', updateTotal));
+    </script>
+
 
 </body>
 

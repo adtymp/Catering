@@ -14,36 +14,6 @@
     <!--main-->
     <div class="transition-all duration-300 p-4 pt-20"
         :class="sidebarOpen ? 'pl-52' : 'pl-12'" class="h-screen absolute top-0 ml-48 p-2 w-full bg-gray-100">
-        @if (session('success'))
-        <div
-            x-data="{ show: true }"
-            x-init="setTimeout(() => show = false, 4000)"
-            x-show="show"
-            x-transition
-            class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4"
-            role="alert">
-            <strong class="font-bold">Sukses! </strong>
-            <span class="block sm:inline">{{ session('success') }}</span>
-            <button
-                @click="show = false"
-                class="absolute top-0 bottom-0 right-0 px-4 py-3 text-green-700">
-                <svg class="fill-current h-6 w-6" role="button" xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20">
-                    <title>Close</title>
-                    <path d="M14.348 5.652a1 1 0 0 0-1.414 0L10 8.586 7.066 5.652a1 1 0 1 0-1.414 1.414L8.586 10l-2.934 2.934a1 1 0 1 0 1.414 1.414L10 11.414l2.934 2.934a1 1 0 0 0 1.414-1.414L11.414 10l2.934-2.934a1 1 0 0 0 0-1.414z" />
-                </svg>
-            </button>
-        </div>
-        @endif
-        @if($errors->any())
-        <div class="text-center text-red-600 alert alert-danger">
-            <ul>
-                @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-        @endif
         <!-- Container besar -->
         <div class="flex flex-col md:flex-row gap-6 p-4">
 

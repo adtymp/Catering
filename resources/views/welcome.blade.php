@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    <x-navbar :categories="$categories" />
+    <x-navbar :categories="$categories" :cartCount="$cartCount"/>
     <!--SlideShow-->
     <div class="pb-10 max-w-6xl mx-auto relative overflow-hidden"
         x-data="{
@@ -84,7 +84,6 @@
     <!--search-->
     <x-search></x-search>
     <!--main-->
-    <div>
         <!-- Paket -->
         <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 pt-10 border-b-4">
             <div class="text-2xl justify-between flex">
