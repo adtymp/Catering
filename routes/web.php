@@ -1,13 +1,16 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AdminDashController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\OngkirController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\LoggedIn;
 use Illuminate\Auth\Events\Login;
@@ -27,14 +30,27 @@ Route::get('/detailProduct/{slug}', [DashboardController::class, 'detailProduct'
 
 
 Route::middleware(LoggedIn::class)->group(function () {
+
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile')->middleware('role:customer');
+
+    Route::get('/address', [AddressController::class, 'index'])->name('address')->middleware('role:customer');
+
+    Route::post('/address/addAddress', [AddressController::class, 'addAddress'])->name('addAddress')->middleware('role:customer');
+
+    Route::post('/profile/deleteAddress/{id}', [AddressController::class, 'deleteAddress'])->name('address.deleteAddress')->middleware('role:customer');
+
     Route::post('/detailProduct/addCart', [CartController::class, 'addCart'])->name('addCart')->middleware('role:customer');
 
-    Route::get('/payment',[ PaymentController::class, 'index'])->name('payment');
+    Route::get('/payment', [PaymentController::class, 'index'])->name('payment')->middleware('role:customer');
 
-    Route::post('/payment/checkout', [PaymentController::class, 'checkOut'])->name('payment.checkout');
+    Route::post('/payment/bayar', [PaymentController::class, 'bayar'])->name('bayar')->middleware('role:customer');
+
+    Route::post('/payment/checkout', [PaymentController::class, 'checkOut'])->name('payment.checkout')->middleware('role:customer');
+
+    Route::get('/cart', [CartController::class, 'index'])->name('cart')->middleware('role:customer');
+
+    Route::post('/cart/delete/{id}', [CartController::class, 'deleteCart'])->name('cart.delete')->middleware('role:customer');
 });
-
-Route::get('/cart', [CartController::class, 'index'])->name('cart');
 
 Route::middleware(AdminMiddleware::class)->group(function () {
     Route::get('/login', [LoginController::class, 'index'])->name('login');

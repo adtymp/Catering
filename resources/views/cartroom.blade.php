@@ -27,7 +27,6 @@
         <div class="p-6 max-w-4xl mx-auto space-y-4 mb-32">
             <h1 class="text-3xl font-bold text-center mb-6">KERANJANGMU</h1>
 
-            @auth
             @forelse ($carts as $cart)
             <div class="bg-white rounded-lg shadow-md p-4 flex gap-4 items-center">
                 <input type="checkbox" name="cart_items[]" value="{{ $cart->id }}" class="mt-2 select-cart-item">
@@ -35,6 +34,7 @@
                 <div class="flex-1">
                     <h2 class="text-lg font-semibold">{{ $cart->product->name }}</h2>
                     <p class="text-sm text-gray-500 line-clamp-2">{{ $cart->product->deskripsi }}</p>
+                    <p class="text-sm text-gray-500 line-clamp-2">Rp {{ number_format($cart->product->price, 0, ',', '.') }}</p>
 
                     <div class="flex items-center mt-2 space-x-2">
                         <button class="bg-gray-200 px-2 py-1 rounded">-</button>
@@ -43,19 +43,24 @@
                     </div>
                 </div>
 
-                <!-- Hapus tombol -->
-                <!-- <form> DI SINI HARUS DIHAPUS -->
-                <button class="text-red-500 hover:text-red-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M3 6h18M9 6V4h6v2m-3 0v14M5 6l1 14h12l1-14" />
+                <!-- Tombol hapus -->
+                <button type="button"
+                    onclick="submitDelete({{ $cart->id }})"
+                    class="text-red-500 hover:text-red-700">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="w-5 h-5 mr-1 ml-3"
+                        fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
                 </button>
-                <!-- </form> DI SINI HARUS DIHAPUS -->
             </div>
             @empty
             <p class="text-center text-gray-500">Keranjangmu masih kosong.</p>
             @endforelse
-            @endauth
 
             @guest
             <p class="text-center text-gray-500">Login untuk melihat halaman ini.</p>
@@ -75,12 +80,18 @@
             </div>
         </div>
     </form>
+    @foreach ($carts as $cart)
+    <form id="delete-form-{{ $cart->id }}" action="{{ route('cart.delete', $cart->id) }}" method="POST" style="display: none;">
+        @csrf
+    </form>
+    @endforeach
+
 
     <script>
         const checkboxes = document.querySelectorAll('.select-cart-item');
         const totalDisplay = document.getElementById('totalHarga');
 
-        const prices = @json($carts -> mapWithKeys(fn($c) => [$c -> id => $c -> product -> price * $c -> quantity]));
+        const prices = @json($carts->mapWithKeys(fn($c) => [$c->id => $c->product->price * $c->quantity]));
 
         function updateTotal() {
             let total = 0;
@@ -89,14 +100,18 @@
                     total += prices[cb.value];
                 }
             });
-
             totalDisplay.textContent = 'Rp ' + total.toLocaleString('id-ID');
         }
 
         checkboxes.forEach(cb => cb.addEventListener('change', updateTotal));
+
+        // Fungsi untuk submit form hapus
+        function submitDelete(cartId) {
+            if (confirm('Yakin ingin menghapus item dari keranjang?')) {
+                document.getElementById(`delete-form-${cartId}`).submit();
+            }
+        }
     </script>
-
-
 </body>
 
 </html>

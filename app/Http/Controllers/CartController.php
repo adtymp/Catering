@@ -41,10 +41,19 @@ class CartController extends Controller
     public function boot()
     {
         View::composer('*', function ($view) {
-            $cartCount = Auth::check()
-                ? Cart::where('user_id', Auth::id())->sum('quantity')
-                : 0;
+            $cartCount = Auth::check() ? Cart::where('user_id', Auth::id())->sum('quantity') : 0;
             $view->with('cartCount', $cartCount);
         });
     }
+
+    public function deleteCart($id)
+    {
+        $cart = Cart::find($id);
+        if ($cart) {
+            $cart->delete();
+        }
+    
+        return redirect()->route('cart')->with('success', 'Produk berhasil dihapus dari keranjang.');
+    }
+    
 }

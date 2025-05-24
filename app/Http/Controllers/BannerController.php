@@ -65,6 +65,6 @@ class BannerController extends Controller
         $banner = Banner::find($id);
         $banner->delete();
 
-        return redirect()->route('productroom');
+        return redirect()->route('productroom')->with('success', 'Produk berhasil dihapus dari keranjang.');
     }
 }
