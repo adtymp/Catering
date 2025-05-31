@@ -16,7 +16,7 @@ class ProfileController extends Controller
         $addresss = address::where('user_id', Auth::id())->get();
         $cartCount = Auth::check() ? Cart::where('user_id', Auth::id())->count() : 0;
         $addresses = Address::where('user_id', Auth::id())->get();
-
+        
         return view('profile', compact('categories', 'addresss', 'cartCount', 'addresses'));
     }
 }

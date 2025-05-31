@@ -15,9 +15,9 @@
 <body x-data="{ sidebarOpen: true }" class="relative">
     <x-sidebar></x-sidebar>
     <div
-        class="transition-all duration-300 p-4"
+        class="transition-all duration-300 p-4 pt-20 min-h-screen w-full"
         :class="sidebarOpen ? 'pl-52' : 'pl-12'" class="h-screen absolute top-0 ml-48 p-2 w-full bg-gray-100">
-        <main class="">
+        <main>
             <div class="grid grid-cols-12 gap-6">
                 <div class="grid grid-cols-12 col-span-12 gap-6 xxl:col-span-9">
                     <div class="col-span-12 mt-8">

@@ -14,7 +14,10 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('address_id')->constrained()->onDelete('cascade');
-            $table->array('product');
+            $table->json('products');
+            $table->string('status')->default('Permintaan');
+            $table->date('delivery_date');
+            $table->time('delivery_time');
             $table->string('shipping_method');
             $table->string('idPesanan')->unique();
             $table->string('bukti_pembayaran');

@@ -85,7 +85,7 @@
                             @auth
                             <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm text-yellow-300 hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Your Profile</a>
                             <!-- Settings -->
-                            <a href="#" class="block px-4 py-2 text-sm text-yellow-300 hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Settings</a>
+                            <a href="{{ route('order') }}" class="block px-4 py-2 text-sm text-yellow-300 hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Lihat Pesanan</a>
                             <!-- Logout -->
                             <form method="POST" action="{{ route('logout') }}" class="block">
                                 @csrf
@@ -156,10 +156,10 @@
                 <a href="#" class="block px-4 py-2 text-sm text-yellow-300 hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Login</a>
                 @endauth
                 <!-- Settings -->
-                <a href="#" class="block px-4 py-2 text-sm text-yellow-300 hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Settings</a>
+                <a href="{{ route('order') }}" class="block px-4 py-2 text-sm text-yellow-300 hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Lihat Pesanan</a>
                 <!-- Logout -->
                 @auth
-                <form method="POST" action="#" class="block">
+                <form method="POST" action="{{ route('logout') }}" class="block">
                     @csrf
                     <button type="submit" class="block px-4 py-2 text-sm text-yellow-300 hover:bg-yellow-300 hover:text-red-800 w-full text-left" role="menuitem" tabindex="-1">Sign out</button>
                 </form>

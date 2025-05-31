@@ -8,6 +8,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\OngkirController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -41,15 +42,19 @@ Route::middleware(LoggedIn::class)->group(function () {
 
     Route::post('/detailProduct/addCart', [CartController::class, 'addCart'])->name('addCart')->middleware('role:customer');
 
+    Route::get('/order', [OrderController::class, 'index'])->name('order')->middleware('role:customer');
+
     Route::get('/payment', [PaymentController::class, 'index'])->name('payment')->middleware('role:customer');
 
-    Route::post('/payment/bayar', [PaymentController::class, 'bayar'])->name('bayar')->middleware('role:customer');
+    Route::get('/payment/checkout', [PaymentController::class, 'checkOut'])->name('payment.checkout')->middleware('role:customer');
 
-    Route::post('/payment/checkout', [PaymentController::class, 'checkOut'])->name('payment.checkout')->middleware('role:customer');
+    Route::post('/payment/request', [PaymentController::class, 'pembayaran'])->name('payment.request')->middleware('role:customer');
 
     Route::get('/cart', [CartController::class, 'index'])->name('cart')->middleware('role:customer');
 
     Route::post('/cart/delete/{id}', [CartController::class, 'deleteCart'])->name('cart.delete')->middleware('role:customer');
+
+    Route::get('/detailpesanan/{idPesanan}', [OrderController::class, 'detailPesanan'])->name('detailpesanan')->middleware('role:customer');
 });
 
 Route::middleware(AdminMiddleware::class)->group(function () {
@@ -90,6 +95,13 @@ Route::middleware(LoggedIn::class)->prefix('admin')->group(function () {
     Route::post('/product/updateProduct/{id}', [ProductController::class, 'updateProduct'])->name('productroom.product.update')->middleware('role:admin');
 
     Route::post('/product/deleteProduct/{id}', [ProductController::class, 'deleteProduct'])->name('productroom.product.delete')->middleware('role:admin');
+
+    //Payment
+    Route::get('/orderAdmin', [OrderController::class, 'indexAdmin'])->name('orderAdmin')->middleware('role:admin');
+
+    Route::get('/orderAdmin/{idPesanan}', [OrderController::class, 'adminDetailPesanan'])->name('adminDetailPesanan')->middleware('role:admin');
+
+    Route::post('/orderAdmin/update/{id}/{status}', [OrderController::class, 'update'])->name('adminDetailPesanan.update')->middleware('role:admin');
 });
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

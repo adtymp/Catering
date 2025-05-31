@@ -29,16 +29,17 @@
     </div>
 
     <!-- Main Section -->
-    <form method="POST" action="" enctype="multipart/form-data">
-
+    @php
+    $addresses = Auth::user()->addresses ?? collect();
+    @endphp
+    <form method="POST" action="{{ route('payment.request') }}" enctype="multipart/form-data"
+        x-data="checkoutForm({{ $addresses->toJson() }}, {{ $subtotal }}, { lat: -7.271307, lng: 112.762703 })" x-init="init()">
+        @csrf
         <div x-data="{openPayment : false }" class="grid md:grid-cols-2 lg:grid-cols-3 gap-y-12 gap-x-8 lg:gap-x-12 p-6">
             <!-- Left: Form -->
             <div class="lg:col-span-2">
-                @php
-                $addresses = Auth::user()->addresses ?? collect();
-                @endphp
                 <!-- Alamat -->
-                <div x-data="alamatDropdown({{ $addresses->toJson() }})" x-init="init()" class="relative w-full">
+                <div x-data="alamatDropdown({{ $addresses->toJson() }}, $data)" x-init="init()" class="relative w-full">
                     <div class="flex justify-between mb-2">
                         <label class="font-semibold">Alamat</label>
                         <div class="relative w-full">
@@ -54,7 +55,7 @@
                                 class="absolute mt-1 w-full bg-white border border-gray-200 rounded shadow-md z-20 max-h-60 overflow-y-auto">
                                 <template x-if="addresses.length > 0">
                                     <template x-for="(address, index) in addresses" :key="index">
-                                        <div @click="setSelected(address)"
+                                        <div @click="setSelected(address); change = false"
                                             class="px-4 py-2 hover:bg-amber-100 cursor-pointer border-b border-gray-300 flex items-center">
                                             <div class="mr-3">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 384 512">
@@ -87,7 +88,7 @@
 
                     <!-- Tampilkan alamat terpilih sebagai HTML styled -->
                     <template x-if="selected">
-                        <div class="w-full border-b-2 border-gray-300 p-4 rounded bg-white text-xs">
+                        <div class="w-full border border-gray-200 p-4 rounded bg-white text-xs shadow-md">
                             <div class="flex  mb-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 384 512">
                                     <path fill="#858585"
@@ -102,16 +103,37 @@
                     <input type="hidden" name="address_id" :value="selected ? selected.id : ''">
                 </div>
 
+                <div class="mt-12">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Jadwal Kirim / Ambil</h2>
+
+                    <div class="bg-white p-6 rounded shadow-md border border-gray-200">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="delivery_date" class="block text-sm font-medium text-gray-700 mb-1">Pilih Tanggal</label>
+                                <input type="date" id="delivery_date" name="delivery_date"
+                                    class="w-full rounded-xl border border-gray-300 focus:border-indigo-400 focus:ring-indigo-200 focus:ring-2 px-4 py-2 text-gray-800 shadow-sm transition">
+                            </div>
+
+                            <div>
+                                <label for="delivery_time" class="block text-sm font-medium text-gray-700 mb-1">Pilih Waktu</label>
+                                <input type="time" id="delivery_time" name="delivery_time"
+                                    class="w-full rounded-xl border border-gray-300 focus:border-indigo-400 focus:ring-indigo-200 focus:ring-2 px-4 py-2 text-gray-800 shadow-sm transition">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
                 <!-- Metode Pengantaran -->
                 <div class="mt-12">
                     <h2 class="font-semibold mb-6">Metode Pengantaran</h2>
                     <div class="grid gap-4 lg:grid-cols-2">
                         <label class="bg-gray-100 p-4 rounded-md border flex items-center gap-4 cursor-pointer">
-                            <input type="radio" name="shipping_method" value="antar" class="w-5 h-5 shipping-method" />
+                            <input type="radio" name="shipping_method" value="antar" class="shipping-method" @change="setShippingMethod('antar')" />
                             <span class=" text-slate-600">Di antar</span>
                         </label>
                         <label class="bg-gray-100 p-4 rounded-md border flex items-center gap-4 cursor-pointer">
-                            <input type="radio" name="shipping_method" value="ambil" class="w-5 h-5 shipping-method" />
+                            <input type="radio" name="shipping_method" value="ambil" class="shipping-method" @change="setShippingMethod('ambil')" />
                             <span class="text-slate-600">Ambil di Tempat</span>
                         </label>
                     </div>
@@ -120,7 +142,7 @@
                 <div class="mt-12 max-w-md">
                     <label class="block mb-2">Punya kode promo?</label>
                     <div class="flex gap-4">
-                        <input type="text" placeholder="Promo code" class="px-4 py-2.5 border border-gray-400 w-full text-sm rounded-md focus:outline-blue-600" />
+                        <input type="text" name="diskon" placeholder="Promo code" class="px-4 py-2.5 border border-gray-400 w-full text-sm rounded-md focus:outline-blue-600" />
                         <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-md text-sm">Terapkan</button>
                     </div>
                 </div>
@@ -129,32 +151,44 @@
             <!-- Right: Ringkasan Pesanan -->
             <div class="lg:col-span-1">
                 @foreach ($selectedCarts as $item)
-                <div class="flex justify-between text-sm font-semibold mb-6">
-                    <span>{{ $item->product->name }} <span>x {{ $item->quantity }}</span></span>
-                    <span>Rp {{ number_format($item->product->price * $item->quantity, 0, ',', '.') }}</span>
+                <div class="flex items-center justify-between py-2 border-b border-gray-200 text-sm text-gray-700">
+                    <div class="flex items-center">
+                        <img src="{{ asset('storage/' . $item->product->image) }}" alt="Product" class="w-16 h-16 object-cover rounded mr-2">
+                        <p class="font-semibold">{{ $item->product->name }}</p>
+                        <p class="text-xs ml-2">x {{ $item->quantity }}</p>
+                    </div>
+                    <div class="text-right font-semibold">
+                        <p>Rp {{ number_format($item->product->price * $item->quantity, 0, ',', '.') }}</p>
+                    </div>
+                    <input type="hidden" name="products[{{ $loop->index }}][image]" value="{{ $item->product->image }}">
+                    <input type="hidden" name="products[{{ $loop->index }}][cart_id]" value="{{ $item->id }}">
+                    <input type="hidden" name="products[{{ $loop->index }}][id]" value="{{ $item->product_id }}">
+                    <input type="hidden" name="products[{{ $loop->index }}][name]" value="{{ $item->product->name }}">
+                    <input type="hidden" name="products[{{ $loop->index }}][qty]" value="{{ $item->quantity }}">
+                    <input type="hidden" name="products[{{ $loop->index }}][price]" value="{{ $item->product->price}}">
                 </div>
                 @endforeach
+
                 <h2 class="text-xl font-semibold mb-6">Ringkasan Pesanan</h2>
                 <ul class="space-y-4 text-sm text-slate-600">
                     <li class="flex justify-between">Subtotal
-                        <span class="font-semibold text-slate-900" id="subtotal">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+                        <span class="font-semibold text-slate-900" id="subtotal" x-text="formatRupiah(subtotal)">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                     </li>
                     <li class="flex justify-between">Diskon
-                        <span class="font-semibold text-slate-900">Rp 0</span>
+                        <span class="font-semibold text-slate-900" id="diskon" x-text="formatRupiah(diskon)">Rp. 0</span>
                     </li>
                     <li class="flex justify-between">Ongkos Kirim
-                        <span class="font-semibold text-slate-900" id="ongkir">Rp 0</span>
-                    </li>
-                    <li class="flex justify-between">Pajak
-                        <span class="font-semibold text-slate-900">Rp 0</span>
+                        <span class="font-semibold text-slate-900" id="ongkir" x-text="formatRupiah(ongkir)"></span>
                     </li>
                     <hr class="border-slate-300" />
-                    <div class="flex justify-between font-bold text-black">
+                    <li class="flex justify-between font-bold text-black">
                         <span>Total</span>
-                        <span id="total">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
-                        <input type="hidden" name="total" x-ref="totalInput">
-                    </div>
+                        <span id="total" x-text="formatRupiah(total)">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+                    </li>
                 </ul>
+                <input type="hidden" name="ongkir" :value="ongkir" x-init="$el.value = ongkir">
+                <input type="hidden" name="diskon" :value="diskon" x-init="$el.value = diskon">
+                <input type="hidden" name="total" x-bind:value="total" x-init="$el.value = total">
 
 
                 <div class="mt-8 space-y-4">
@@ -164,7 +198,7 @@
                 <div x-show="openPayment" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                     <div class="bg-white p-6  overflow-y-auto rounded-lg">
                         <div class="flex justify-end">
-                            <button @click="openPayment = false" class="text-gray-500 hover:text-red-500">
+                            <button @click="openPayment = false" type="button" class="text-gray-500 hover:text-red-500">
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                                 </svg>
@@ -176,6 +210,9 @@
                         <div class="border-2 p-4">
                             <input type="file" name="bukti_pembayaran" accept="image/*" required>
                         </div>
+                        <button @click="openPayment = false" type="button" class="w-full justify-center items-center rounded-3xl mt-3 px-8 py-2 text-center bg-red-800 text-white hover:bg-red-900">
+                            Submit
+                        </button>
                     </div>
                 </div>
             </div>
@@ -183,7 +220,7 @@
     </form>
 
     <script>
-        function alamatDropdown(addressList) {
+        function alamatDropdown(addressList, parentComponent) {
             return {
                 change: false,
                 addresses: addressList,
@@ -196,152 +233,90 @@
                 setSelected(address) {
                     this.selected = address;
                     this.change = false;
+                    parentComponent.setSelected(address);
                 }
             }
         }
-    </script>
 
-
-    <script>
-        const LOCATIONIQ_API_KEY = "{{ env('LOCATIONIQ_API_KEY') }}";
-    </script>
-    <script>
-        function locationPicker() {
+        function checkoutForm(addresses, subtotal, outletLocation) {
             return {
-                map: null,
-                marker: null,
-                lat: '',
-                lng: '',
-                address: '',
-                suggestions: [],
-                showSuggestions: false,
-                outletLat: -7.271307, //lokasi outlet
-                outletLng: 112.762703,
-                distance: 0,
-                shippingCost: 0,
-                subtotal: {{$subtotal}},
+                addresses,
+                subtotal,
+                outletLocation,
+                selectedAddress: null,
+                shippingMethod: '',
+                ongkir: 0,
+                diskon: 0,
 
                 init() {
-                    this.map = L.map('map').setView([this.outletLat, this.outletLng], 13);
-
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '© OpenStreetMap'
-                    }).addTo(this.map);
-
-                    this.marker = L.marker([this.outletLat, this.outletLng], {
-                        draggable: true
-                    }).addTo(this.map);
-
-                    this.marker.on('dragend', (e) => {
-                        const pos = e.target.getLatLng();
-                        this.lat = pos.lat;
-                        this.lng = pos.lng;
-                        this.reverseGeocode();
-                        this.calculateDistance();
-                    });
-
-                    this.map.on('click', (e) => {
-                        this.lat = e.latlng.lat;
-                        this.lng = e.latlng.lng;
-                        this.marker.setLatLng([this.lat, this.lng]);
-                        this.reverseGeocode();
-                        this.calculateDistance();
-                    });
-
-                    // Lokasi awal dari browser
-                    if (navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition((position) => {
-                            this.lat = position.coords.latitude;
-                            this.lng = position.coords.longitude;
-                            this.map.setView([this.lat, this.lng], 15);
-                            this.marker.setLatLng([this.lat, this.lng]);
-                            this.reverseGeocode();
-                            this.calculateDistance();
-                        }, () => {
-                            this.lat = this.outletLat;
-                            this.lng = this.outletLng;
-                            this.reverseGeocode();
-                            this.calculateDistance();
-                        });
-                    }
-
-                    // Event metode pengantaran
-                    document.querySelectorAll('input[name="shipping_method"]').forEach(el => {
-                        el.addEventListener('change', () => {
-                            this.updateShippingCost();
-                        });
-                    });
+                    this.calculateOngkir();
                 },
 
-                async reverseGeocode() {
-                    try {
-                        const res = await fetch(`https://us1.locationiq.com/v1/reverse?key={{ env('LOCATIONIQ_API_KEY') }}&lat=${this.lat}&lon=${this.lng}&format=json`);
-                        const data = await res.json();
-                        this.address = data.display_name || '';
-                    } catch (e) {
-                        console.error('Reverse geocode error', e);
+                get total() {
+                    const total = this.subtotal + this.ongkir - this.diskon;
+                    console.log("=== DEBUG TOTAL CHECKOUT ===");
+                    console.log("Subtotal:", this.subtotal);
+                    console.log("Ongkir:", this.ongkir);
+                    console.log("Diskon:", this.diskon);
+                    console.log("Total Akhir:", total);
+                    return total;
+                },
+
+                formatRupiah(number) {
+                    return new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0
+                    }).format(number).replace(",00", "");
+                },
+
+                setSelected(address) {
+                    this.selectedAddress = address;
+                    if (this.shippingMethod === 'antar') {
+                        this.calculateOngkir();
                     }
                 },
 
-                async searchAddress() {
-                    if (!this.address || this.address.length < 3) return;
-
-                    try {
-                        const res = await fetch(`https://us1.locationiq.com/v1/search?key={{ env('LOCATIONIQ_API_KEY') }}&q=${encodeURIComponent(this.address)}&countrycodes=id&format=json`);
-                        const data = await res.json();
-                        this.suggestions = data || [];
-                        this.showSuggestions = true;
-
-                        if (data.length > 0) {
-                            this.selectSuggestion(data[0]);
-                        }
-                    } catch (e) {
-                        console.error('Search failed', e);
-                        this.suggestions = [];
+                setShippingMethod(method) {
+                    this.shippingMethod = method;
+                    if (method === 'antar' && this.selectedAddress) {
+                        this.calculateOngkir();
+                    } else {
+                        this.ongkir = 0;
                     }
                 },
 
-                selectSuggestion(item) {
-                    this.lat = parseFloat(item.lat);
-                    this.lng = parseFloat(item.lon);
-                    this.address = item.display_name;
-                    this.map.setView([this.lat, this.lng], 15);
-                    this.marker.setLatLng([this.lat, this.lng]);
-                    this.showSuggestions = false;
-                    this.calculateDistance();
-                },
-
-                calculateDistance() {
-                    const R = 6371; // km
-                    const dLat = (this.lat - this.outletLat) * Math.PI / 180;
-                    const dLon = (this.lng - this.outletLng) * Math.PI / 180;
-                    const a =
-                        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                        Math.cos(this.outletLat * Math.PI / 180) * Math.cos(this.lat * Math.PI / 180) *
+                haversine(lat1, lon1, lat2, lon2) {
+                    const R = 6371;
+                    const toRad = deg => deg * Math.PI / 180;
+                    const dLat = toRad(lat2 - lat1);
+                    const dLon = toRad(lon2 - lon1);
+                    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
                         Math.sin(dLon / 2) * Math.sin(dLon / 2);
                     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-                    this.distance = R * c;
-
-                    this.updateShippingCost();
+                    return R * c;
                 },
 
-                updateShippingCost() {
-                    let cost = Math.max(3000, Math.round(this.distance / 2 * 2000));
-
-                    cost = Math.ceil(cost / 1000) * 1000;
-
-                    this.shippingCost = cost;
-
-                    const ongkirEl = document.getElementById('ongkir');
-                    const totalEl = document.getElementById('total');
-
-                    const method = document.querySelector('input[name="shipping_method"]:checked')?.value;
-                    if (method === 'antar') {
-                        ongkirEl.textContent = 'Rp ' + cost.toLocaleString('id-ID');
-                        totalEl.textContent = 'Rp ' + (this.subtotal + cost).toLocaleString('id-ID');
+                calculateOngkir() {
+                    if (
+                        this.selectedAddress &&
+                        this.shippingMethod === 'antar' &&
+                        this.selectedAddress.latitude &&
+                        this.selectedAddress.longitude
+                    ) {
+                        const distance = this.haversine(
+                            this.outletLocation.lat,
+                            this.outletLocation.lng,
+                            this.selectedAddress.latitude,
+                            this.selectedAddress.longitude
+                        );
+                        const ongkos = 2000;
+                        const bagi = Math.ceil(distance / 3);
+                        this.ongkir = ongkos * bagi;
                     } else {
-                        ongkirEl.textContent = 'Rp 0';
-                        totalEl.textContent = 'Rp ' + this.subtotal.toLocaleString('id-ID');
+                        this.ongkir = 0;
                     }
                 }
             }
