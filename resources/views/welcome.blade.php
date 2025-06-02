@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    <x-navbar :categories="$categories" :cartCount="$cartCount"/>
+    <x-navbar :categories="$categories" :cartCount="$cartCount" />
     <!--SlideShow-->
     <div class="pb-10 max-w-6xl mx-auto relative overflow-hidden"
         x-data="{
@@ -84,79 +84,90 @@
     <!--search-->
     <x-search></x-search>
     <!--main-->
-        <!-- Paket -->
-        <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 pt-10 border-b-4">
-            <div class="text-2xl justify-between flex">
-                <h1 class="font-bold">Paket</h1>
-                <a href="">Show All</a>
-            </div>
-            <div class="items-center justify-center grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 py-1 pt-4">
-                @php
-                $paketProducts = $products->filter(function($product) {
-                return $product->category && $product->category->name === 'Paket';
+    <!-- Paket -->
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 border-b-4 border-red-200">
+        <h1 class="text-3xl sm:text-4xl text-center font-extrabold text-white bg-red-600 py-4 rounded-lg shadow-md">
+            Paket
+        </h1>
+        <div class="items-center justify-center grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 py-1 pt-4">
+            @php
+            $paketProducts = $products->filter(function($product) {
+            return $product->category && $product->category->name === 'Paket';
+            })->take(4);
+            @endphp
+
+            @foreach ($paketProducts as $product)
+            <x-card :product="$product" :categories="$categories" />
+            @endforeach
+        </div>
+        <div class="mt-10 flex justify-center">
+            <a href="#" class="inline-block w-full sm:w-48 text-center text-white font-semibold bg-red-600 hover:bg-white hover:text-red-600 border-2 border-red-600 py-3 rounded-lg transition duration-300 ease-in-out shadow">
+                Show All
+            </a>
+        </div>
+    </div>
+    <!-- Dibawah 20000 -->
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 border-b-4 border-red-200">
+        <h1 class="text-3xl sm:text-4xl text-center font-extrabold text-white bg-red-600 py-4 rounded-lg shadow-md">
+            Harga Dibawah <= Rp. 20.000
+        </h1>
+        <div class="items-center justify-center grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 py-1 pt-4">
+            @php
+            $paketProducts = $products->filter(function($product){
+            return $product->price <= 20000;
                 })->take(4);
                 @endphp
 
                 @foreach ($paketProducts as $product)
                 <x-card :product="$product" :categories="$categories" />
                 @endforeach
-
-            </div>
         </div>
-        <!-- Dibawah 20000 -->
-        <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 pt-10 border-b-4">
-            <div class="text-2xl justify-between flex">
-                <h1 class="font-bold">Di Bawah Rp 20.000</h1>
-                <a href="">Show All</a>
-            </div>
-            <div class="items-center justify-center grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 py-1 pt-4">
-                @php
-                $paketProducts = $products->filter(function($product){
-                return $product->price <= 20000;
-                    })->take(4);
-                    @endphp
-
-                    @foreach ($paketProducts as $product)
-                    <x-card :product="$product" :categories="$categories" />
-                    @endforeach
-            </div>
+        <div class="mt-10 flex justify-center">
+            <a href="#" class="inline-block w-full sm:w-48 text-center text-white font-semibold bg-red-600 hover:bg-white hover:text-red-600 border-2 border-red-600 py-3 rounded-lg transition duration-300 ease-in-out shadow">
+                Show All
+            </a>
         </div>
-        <!-- Nasi Kotak -->
-        <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 pt-10 border-b-4">
-            <div class="text-2xl justify-between flex">
-                <h1 class="font-bold">Nasi Kotak</h1>
-                <a href="">Show All</a>
-            </div>
-            <div class="items-center justify-center grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 py-1 pt-4">
-                @php
-                $paketProducts = $products->filter(function($product) {
-                return $product->category && $product->category->name === 'Nasi Kotak';
+    </div>
+    <!-- Nasi Kotak -->
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 border-b-4 border-red-200">
+        <h1 class="text-3xl sm:text-4xl text-center font-extrabold text-white bg-red-600 py-4 rounded-lg shadow-md">
+            Nasi Kotak
+        </h1>
+        <div class="items-center justify-center grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 py-1 pt-4">
+            @php
+            $paketProducts = $products->filter(function($product){
+            return $product->price <= 20000;
                 })->take(4);
                 @endphp
 
                 @foreach ($paketProducts as $product)
                 <x-card :product="$product" :categories="$categories" />
                 @endforeach
-
-            </div>
         </div>
-        <!--footer-->
-        <footer class="bg-yellow-100 text-center text-amber-800">
-            <div class="p-8">
-                <section class="">
-                    <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-facebook-f"></i>Facebook</a>
-                    <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-twitter">Twitter</i></a>
-                    <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-instagram"></i>Instagram</a>
-                    <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-linkedin-in"></i>Linkedlin</a>
-                    <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-github"></i>github</a>
-                </section>
-            </div>
-            <div class="text-center p-5" style="background-color: rgba(0, 0, 0, 0.2);">
-                @2024 Recommended
-            </div>
-        </footer>
+        <div class="mt-10 flex justify-center">
+            <a href="#" class="inline-block w-full sm:w-48 text-center text-white font-semibold bg-red-600 hover:bg-white hover:text-red-600 border-2 border-red-600 py-3 rounded-lg transition duration-300 ease-in-out shadow">
+                Show All
+            </a>
+        </div>
+    </div>
 
-        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!--footer-->
+    <footer class="bg-yellow-100 text-center text-amber-800">
+        <div class="p-8">
+            <section class="">
+                <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-facebook-f"></i>Facebook</a>
+                <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-twitter">Twitter</i></a>
+                <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-instagram"></i>Instagram</a>
+                <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-linkedin-in"></i>Linkedlin</a>
+                <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-github"></i>github</a>
+            </section>
+        </div>
+        <div class="text-center p-5" style="background-color: rgba(0, 0, 0, 0.2);">
+            @2024 Recommended
+        </div>
+    </footer>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 </body>
 

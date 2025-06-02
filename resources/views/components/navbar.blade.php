@@ -131,40 +131,38 @@
             <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-yellow-300 hover:text-red-800 hover:bg-yellow-300">Tentang Kami</a>
         </div>
         <div class="border-t border-yellow-300 pb-3 pt-4">
-            <div class="flex items-center px-5">
-                <div class="shrink-0">
+            <div class="flex items-center px-5 justify-between">
+                <!-- <div class="shrink-0">
                     <img class="size-10 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
-                </div>
+                </div> -->
                 @auth
-                <div class="ml-3">
+                <div>
                     <div class="text-base/5 font-medium text-white">{{ Auth::user()->name }}</div>
                     <div class="text-sm font-medium text-gray-400">{{ Auth::user()->email }}</div>
                 </div>
-                @endauth
-                <button type="button" class="relative ml-auto shrink-0 rounded-full bg-yellow-100 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                    <span class="absolute -inset-1.5"></span>
-                    <span class="sr-only">View notifications</span>
-                    <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+                <a href="{{ route('cart') }}" class="relative p-1 mr-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="25" width="25" viewBox="0 0 576 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+                        <path fill="#fff000" d="M0 24C0 10.7 10.7 0 24 0L69.5 0c22 0 41.5 12.8 50.6 32l411 0c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3l-288.5 0 5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5L488 336c13.3 0 24 10.7 24 24s-10.7 24-24 24l-288.3 0c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5L24 48C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
                     </svg>
-                </button>
+                    @if($cartCount > 0)
+                    <span class="absolute -top-1 -right-1 bg-white text-red-800 text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                        {{ $cartCount }}
+                    </span>
+                    @endif
+                </a>
+                @endauth
             </div>
-            <div class="mt-3 space-y-1 px-2">
+            <div class="space-y-1 px-2">
                 @auth
                 <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm text-yellow-300 hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Your Profile</a>
-                @else
-                <a href="#" class="block px-4 py-2 text-sm text-yellow-300 hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Login</a>
-                @endauth
-                <!-- Settings -->
                 <a href="{{ route('order') }}" class="block px-4 py-2 text-sm text-yellow-300 hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Lihat Pesanan</a>
-                <!-- Logout -->
-                @auth
                 <form method="POST" action="{{ route('logout') }}" class="block">
                     @csrf
                     <button type="submit" class="block px-4 py-2 text-sm text-yellow-300 hover:bg-yellow-300 hover:text-red-800 w-full text-left" role="menuitem" tabindex="-1">Sign out</button>
                 </form>
+                @else
+                <a href="#" class="block px-4 py-2 text-sm text-yellow-300 hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Login</a>
                 @endauth
-
             </div>
         </div>
     </div>
