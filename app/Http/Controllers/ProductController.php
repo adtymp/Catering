@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Banner;
+use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -136,5 +138,26 @@ class ProductController extends Controller
         $categories = Category::all();
 
         return view('productroom', compact('products', 'categories'));
+    }
+    public function showByCategory($name)
+    {
+        $cartCount = Auth::check() ? Cart::where('user_id', Auth::id())->count() : 0;
+        $products = Product::with('category')
+            ->whereHas('category', function ($query) use ($name) {
+                $query->where('name', $name);
+            })->get();
+
+        $categories = Category::all();
+
+        return view('showall', compact('products', 'categories', 'name', 'cartCount'));
+    }
+
+    public function showByPrice($price)
+    {
+        $products = Product::with('category')->where('price', '<=', $price)->get();
+        $categories = Category::all();
+        $cartCount = Auth::check() ? Cart::where('user_id', Auth::id())->count() : 0;
+
+        return view('showall', compact('products', 'categories', 'price', 'cartCount'));
     }
 }

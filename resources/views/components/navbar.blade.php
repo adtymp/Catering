@@ -5,7 +5,7 @@
             <div class="flex items-center">
                 <div class="shrink-0">
                     <a href="/" class="rounded-md px-3 py-2 text-sm font-medium text-white flex">
-                        <div class="text-yellow-300 text-3xl font-bold">LOGO</div>
+                        <div class="text-amber-200 text-3xl font-bold">LOGO</div>
                     </a>
                 </div>
                 <!-- resources/views/components/navbar.blade.php -->
@@ -14,7 +14,7 @@
                         <div x-data="{ menuOpen: false }" class="relative">
                             <button
                                 @click="menuOpen = !menuOpen"
-                                class="rounded-md px-3 py-2 text-sm font-medium text-yellow-300 hover:text-red-800 hover:bg-yellow-300">
+                                class="rounded-md px-3 py-2 text-sm font-medium text-amber-200 hover:text-red-800 hover:bg-yellow-300">
                                 Menu
                             </button>
 
@@ -26,8 +26,10 @@
                                 <ul class="py-2">
                                     @foreach($categories as $category)
                                     <li class="flex items-center px-4 py-2 hover:bg-amber-100">
-                                        <img src="{{ asset('storage/' . $category->icon) }}" alt="{{ $category->name }}" class="w-6 h-6 object-cover mr-2 rounded">
-                                        <span class="text-gray-800 text-sm">{{ $category->name }}</span>
+                                        <a href="{{ route('products.category', ['name' => $category->name]) }}" class="flex items-center">
+                                            <img src="{{ asset('storage/' . $category->icon) }}" alt="{{ $category->name }}" class="w-6 h-6 object-cover mr-2 rounded">
+                                            <span class="text-gray-800 text-sm">{{ $category->name }}</span>
+                                        </a>
                                     </li>
                                     @endforeach
                                 </ul>
@@ -36,9 +38,9 @@
 
 
                         <!-- Menu lainnya -->
-                        <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-yellow-300 hover:text-red-800 hover:bg-yellow-300">Cara Pesan</a>
-                        <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-yellow-300 hover:text-red-800 hover:bg-yellow-300">Ulasan</a>
-                        <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-yellow-300 hover:text-red-800 hover:bg-yellow-300">Tentang Kami</a>
+                        <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-amber-200 hover:text-red-800 hover:bg-yellow-300">Cara Pesan</a>
+                        <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-amber-200 hover:text-red-800 hover:bg-yellow-300">Ulasan</a>
+                        <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-amber-200 hover:text-red-800 hover:bg-yellow-300">Tentang Kami</a>
                     </div>
                 </div>
 
@@ -83,20 +85,20 @@
 
                             <!-- Your Profile -->
                             @auth
-                            <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm text-yellow-300 hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Your Profile</a>
+                            <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm text-amber-200 hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Your Profile</a>
                             <!-- Settings -->
-                            <a href="{{ route('order') }}" class="block px-4 py-2 text-sm text-yellow-300 hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Lihat Pesanan</a>
+                            <a href="{{ route('order') }}" class="block px-4 py-2 text-sm text-amber-200 hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Lihat Pesanan</a>
                             <!-- Logout -->
                             <form method="POST" action="{{ route('logout') }}" class="block">
                                 @csrf
-                                <button type="submit" class="block px-4 py-2 text-sm text-yellow-300 hover:bg-yellow-300 hover:text-red-800 w-full text-left" role="menuitem" tabindex="-1">
+                                <button type="submit" class="block px-4 py-2 text-sm text-amber-200 hover:bg-yellow-300 hover:text-red-800 w-full text-left" role="menuitem" tabindex="-1">
                                     Sign out
                                 </button>
                             </form>
                             @endauth
 
                             @guest
-                            <a href="{{ route('login') }}" class="block px-4 py-2 text-sm text-yellow-300 hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Login</a>
+                            <a href="{{ route('login') }}" class="block px-4 py-2 text-sm text-amber-200 hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Login</a>
                             @endguest
                         </div>
                     </div>
@@ -104,7 +106,7 @@
             </div>
             <div class="-mr-2 flex md:hidden">
                 <!-- Mobile menu button -->
-                <button type="button" @click="isOpen = !isOpen" class="relative inline-flex items-center justify-center rounded-md bg-red-800 p-2 text-yellow-300 hover:bg-yellow-300 hover:text-red-800  ring-2 ring-yellow-300" aria-controls="mobile-menu" aria-expanded="false">
+                <button type="button" @click="isOpen = !isOpen" class="relative inline-flex items-center justify-center rounded-md bg-red-800 p-2 text-amber-200 hover:bg-yellow-300 hover:text-red-800  ring-2 ring-yellow-300" aria-controls="mobile-menu" aria-expanded="false">
                     <span class="absolute -inset-0.5"></span>
                     <span class="sr-only">Open main menu</span>
                     <!-- Menu open: "hidden", Menu closed: "block" -->
@@ -125,10 +127,10 @@
         <div class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
             <!-- Current: "bg-gray-900 text-white", Default: "text-white hover:bg-gray-700 hover:text-white" -->
             <!-- <a href="#" class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white" aria-current="page">Dashboard</a> -->
-            <button class="rounded-md px-3 py-2 text-sm font-medium text-yellow-300 hover:text-red-800 hover:bg-yellow-300">Menu</button>
-            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-yellow-300 hover:text-red-800 hover:bg-yellow-300">Cara Pesan</a>
-            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-yellow-300 hover:text-red-800 hover:bg-yellow-300">Ulasan</a>
-            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-yellow-300 hover:text-red-800 hover:bg-yellow-300">Tentang Kami</a>
+            <button class="rounded-md px-3 py-2 text-sm font-medium text-amber-200 hover:text-red-800 hover:bg-yellow-300">Menu</button>
+            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-amber-200 hover:text-red-800 hover:bg-yellow-300">Cara Pesan</a>
+            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-amber-200 hover:text-red-800 hover:bg-yellow-300">Ulasan</a>
+            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-amber-200 hover:text-red-800 hover:bg-yellow-300">Tentang Kami</a>
         </div>
         <div class="border-t border-yellow-300 pb-3 pt-4">
             <div class="flex items-center px-5 justify-between">
@@ -154,14 +156,14 @@
             </div>
             <div class="space-y-1 px-2">
                 @auth
-                <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm text-yellow-300 hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Your Profile</a>
-                <a href="{{ route('order') }}" class="block px-4 py-2 text-sm text-yellow-300 hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Lihat Pesanan</a>
+                <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm text-amber-200 hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Your Profile</a>
+                <a href="{{ route('order') }}" class="block px-4 py-2 text-sm text-amber-200 hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Lihat Pesanan</a>
                 <form method="POST" action="{{ route('logout') }}" class="block">
                     @csrf
-                    <button type="submit" class="block px-4 py-2 text-sm text-yellow-300 hover:bg-yellow-300 hover:text-red-800 w-full text-left" role="menuitem" tabindex="-1">Sign out</button>
+                    <button type="submit" class="block px-4 py-2 text-sm text-amber-200 hover:bg-yellow-300 hover:text-red-800 w-full text-left" role="menuitem" tabindex="-1">Sign out</button>
                 </form>
                 @else
-                <a href="#" class="block px-4 py-2 text-sm text-yellow-300 hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Login</a>
+                <a href="#" class="block px-4 py-2 text-sm text-amber-200 hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Login</a>
                 @endauth
             </div>
         </div>

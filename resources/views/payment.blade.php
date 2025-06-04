@@ -313,7 +313,7 @@
                             this.selectedAddress.longitude
                         );
                         const ongkos = 2000;
-                        const bagi = Math.ceil(distance / 3);
+                        const bagi = Math.ceil(distance / 2);
                         this.ongkir = ongkos * bagi;
                     } else {
                         this.ongkir = 0;

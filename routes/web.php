@@ -29,6 +29,9 @@ Route::post('/register', [LoginController::class, 'regis'])->name('register');
 
 Route::get('/detailProduct/{slug}', [DashboardController::class, 'detailProduct'])->name('detailproduct');
 
+Route::get('/products/category/{name}', [ProductController::class, 'showByCategory'])->name('products.category');
+
+Route::get('/products/under/{price}', [ProductController::class, 'showByPrice'])->name('products.under');
 
 Route::middleware(LoggedIn::class)->group(function () {
 

@@ -101,7 +101,7 @@
             @endforeach
         </div>
         <div class="mt-10 flex justify-center">
-            <a href="#" class="inline-block w-full sm:w-48 text-center text-white font-semibold bg-red-600 hover:bg-white hover:text-red-600 border-2 border-red-600 py-3 rounded-lg transition duration-300 ease-in-out shadow">
+            <a href="{{ route('products.category', ['name' => 'Paket']) }}" class="inline-block w-full sm:w-48 text-center text-white font-semibold bg-red-600 hover:bg-white hover:text-red-600 border-2 border-red-600 py-3 rounded-lg transition duration-300 ease-in-out shadow">
                 Show All
             </a>
         </div>
@@ -109,7 +109,7 @@
     <!-- Dibawah 20000 -->
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 border-b-4 border-red-200">
         <h1 class="text-3xl sm:text-4xl text-center font-extrabold text-white bg-red-600 py-4 rounded-lg shadow-md">
-            Harga Dibawah <= Rp. 20.000
+            Harga Dibawah Rp. 20.000
         </h1>
         <div class="items-center justify-center grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 py-1 pt-4">
             @php
@@ -123,7 +123,7 @@
                 @endforeach
         </div>
         <div class="mt-10 flex justify-center">
-            <a href="#" class="inline-block w-full sm:w-48 text-center text-white font-semibold bg-red-600 hover:bg-white hover:text-red-600 border-2 border-red-600 py-3 rounded-lg transition duration-300 ease-in-out shadow">
+            <a href="{{ route('products.under', ['price' => 20000]) }}" class="inline-block w-full sm:w-48 text-center text-white font-semibold bg-red-600 hover:bg-white hover:text-red-600 border-2 border-red-600 py-3 rounded-lg transition duration-300 ease-in-out shadow">
                 Show All
             </a>
         </div>
@@ -135,17 +135,17 @@
         </h1>
         <div class="items-center justify-center grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 py-1 pt-4">
             @php
-            $paketProducts = $products->filter(function($product){
-            return $product->price <= 20000;
-                })->take(4);
-                @endphp
+            $paketProducts = $products->filter(function($product) {
+            return $product->category && $product->category->name === 'Nasi Kotak';
+            })->take(4);
+            @endphp
 
-                @foreach ($paketProducts as $product)
-                <x-card :product="$product" :categories="$categories" />
-                @endforeach
+            @foreach ($paketProducts as $product)
+            <x-card :product="$product" :categories="$categories" />
+            @endforeach
         </div>
         <div class="mt-10 flex justify-center">
-            <a href="#" class="inline-block w-full sm:w-48 text-center text-white font-semibold bg-red-600 hover:bg-white hover:text-red-600 border-2 border-red-600 py-3 rounded-lg transition duration-300 ease-in-out shadow">
+            <a href="{{ route('products.category', ['name' => 'Nasi Kotak']) }}" class="inline-block w-full sm:w-48 text-center text-white font-semibold bg-red-600 hover:bg-white hover:text-red-600 border-2 border-red-600 py-3 rounded-lg transition duration-300 ease-in-out shadow">
                 Show All
             </a>
         </div>
