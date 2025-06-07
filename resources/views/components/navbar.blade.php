@@ -38,9 +38,9 @@
 
 
                         <!-- Menu lainnya -->
-                        <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-amber-200 hover:text-red-800 hover:bg-yellow-300">Cara Pesan</a>
-                        <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-amber-200 hover:text-red-800 hover:bg-yellow-300">Ulasan</a>
-                        <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-amber-200 hover:text-red-800 hover:bg-yellow-300">Tentang Kami</a>
+                        <a href="{{ route('carapesan') }}" class="rounded-md px-3 py-2 text-sm font-medium text-amber-200 hover:text-red-800 hover:bg-yellow-300">Cara Pesan</a>
+                        <a href="{{ route('ulasan') }}" class="rounded-md px-3 py-2 text-sm font-medium text-amber-200 hover:text-red-800 hover:bg-yellow-300">Ulasan</a>
+                        <a href="{{ route('about') }}" class="rounded-md px-3 py-2 text-sm font-medium text-amber-200 hover:text-red-800 hover:bg-yellow-300">Tentang Kami</a>
                     </div>
                 </div>
 

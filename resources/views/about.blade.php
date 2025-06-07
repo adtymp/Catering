@@ -14,6 +14,6 @@
 
 <body>
     <x-navbar :categories="$categories" :cartCount="$cartCount" />
-
+    
 </body>
 </html>
