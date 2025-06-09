@@ -152,21 +152,7 @@
     </div>
 
     <!--footer-->
-    <footer class="bg-yellow-100 text-center text-amber-800">
-        <div class="p-8">
-            <section class="">
-                <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-facebook-f"></i>Facebook</a>
-                <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-twitter">Twitter</i></a>
-                <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-instagram"></i>Instagram</a>
-                <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-linkedin-in"></i>Linkedlin</a>
-                <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-github"></i>github</a>
-            </section>
-        </div>
-        <div class="text-center p-5" style="background-color: rgba(0, 0, 0, 0.2);">
-            @2024 Recommended
-        </div>
-    </footer>
-
+   
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 </body>

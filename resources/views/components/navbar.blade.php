@@ -199,3 +199,7 @@
     </ul>
 </div>
 @endif
+
+<x-footer>
+    
+</x-footer>
