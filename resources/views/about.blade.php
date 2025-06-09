@@ -1,3 +1,4 @@
+```
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,30 +35,89 @@
 -->
 <div class="bg-white">
   <div class="pt-6">
-    <nav aria-label="Breadcrumb">
-      <ol role="list" class="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-        <li>
-          <div class="flex items-center">
-            <a href="#" class="mr-2 text-sm font-medium text-gray-900">Men</a>
-            <svg width="16" height="20" viewBox="0 0 16 20" fill="currentColor" aria-hidden="true" class="h-5 w-4 text-gray-300">
-              <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
-            </svg>
-          </div>
-        </li>
-        <li>
-          <div class="flex items-center">
-            <a href="#" class="mr-2 text-sm font-medium text-gray-900">Clothing</a>
-            <svg width="16" height="20" viewBox="0 0 16 20" fill="currentColor" aria-hidden="true" class="h-5 w-4 text-gray-300">
-              <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
-            </svg>
-          </div>
-        </li>
+   <div class="relative w-full max-w-7xl h-[500px] mx-auto">
+  <!-- Skeleton Placeholder -->
+  <div class="absolute inset-0 bg-gray-200 rounded-xl animate-pulse"></div>
 
-        <li class="text-sm">
-          <a href="#" aria-current="page" class="font-medium text-gray-500 hover:text-gray-600">Basic Tee 6-Pack</a>
-        </li>
-      </ol>
-    </nav>
+  <!-- Gambar -->
+  <img
+    src="https://via.placeholder.com/1024x320"
+    alt="Contoh Gambar"
+    class="w-full h-full object-cover rounded-xl relative z-10"
+    onload="this.previousElementSibling.style.display='none'"
+  />
+</div>
+
+
+
+
+
+    <div class="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:gap-x-8 lg:px-8">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum suscipit in dolor enim itaque ab magnam corporis optio maiores doloribus. Facilis voluptas aperiam quisquam alias voluptates consequuntur numquam minima laudantium!Lorem Lorem lorem ipsu
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum suscipit in dolor enim itaque ab magnam corporis optio maiores doloribus. Facilis voluptas aperiam quisquam alias voluptates consequuntur numquam minima laudantium!Lorem Lorem lorem ipsu
+
+    </div>
+
+    <div class="mx-auto w-full max-w-screen-2xl px-4 py-8">
+  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <!-- Kotak 1 -->
+    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-md">
+      <h3 class="mb-2 text-xl font-bold">Judul Kotak 1</h3>
+      <p class="text-gray-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    </div>
+
+    <!-- Kotak 2 -->
+    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-md">
+      <h3 class="mb-2 text-xl font-bold">Judul Kotak 2</h3>
+      <p class="text-gray-600">Sed do eiusmod tempor incididunt ut labore et dolore.</p>
+    </div>
+
+    <!-- Kotak 3 -->
+    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-md">
+      <h3 class="mb-2 text-xl font-bold">Judul Kotak 3</h3>
+      <p class="text-gray-600">Ut enim ad minim veniam, quis nostrud exercitation.</p>
+    </div>
+  </div>
+</div>
+
+    <div class="w-full h-screen p-8 bg-gray-100">
+  <!-- Satu Kotak Besar -->
+  <div class="h-full w-full rounded-2xl  bg-white shadow-2xl overflow-hidden">
+
+    <!-- Header -->
+    <div class="p-6 ">
+      <h1 class="text-4xl font-bold">Judul Konten</h1>
+      <p class="text-xl mt-2">Deskripsi singkat konten Anda</p>
+    </div>
+
+    <!-- Konten Utama -->
+    <div class="p-8 overflow-y-auto h-[calc(100%-7.5rem)]">
+      <h2 class="text-2xl font-semibold mb-4">Section 1</h2>
+      <p class="text-lg mb-6">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+
+      <h2 class="text-2xl font-semibold mb-4">Section 2</h2>
+      <p class="text-lg mb-6">Nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+
+      <div class="grid grid-cols-2 gap-4 mt-8">
+        <div class="bg-blue-100 p-4 rounded-lg">
+          <h3 class="font-bold text-blue-800">Fitur 1</h3>
+          <p>Penjelasan fitur pertama</p>
+        </div>
+        <div class="bg-green-100 p-4 rounded-lg">
+          <h3 class="font-bold text-green-800">Fitur 2</h3>
+          <p>Penjelasan fitur kedua</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="bg-gray-100 p-4 text-center border-t border-gray-300">
+      <p class="text-gray-600">© 2023 Perusahaan Anda</p>
+    </div>
+  </div>
+</div>
+
+
 
     <!-- Image gallery -->
     <div class="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
@@ -240,31 +300,33 @@
           </div>
         </div>
 
-        <div class="mt-10">
-          <h3 class="text-sm font-medium text-gray-900">Highlights</h3>
 
-          <div class="mt-4">
-            <ul role="list" class="list-disc space-y-2 pl-4 text-sm">
-              <li class="text-gray-400"><span class="text-gray-600">Hand cut and sewn locally</span></li>
-              <li class="text-gray-400"><span class="text-gray-600">Dyed with our proprietary colors</span></li>
-              <li class="text-gray-400"><span class="text-gray-600">Pre-washed &amp; pre-shrunk</span></li>
-              <li class="text-gray-400"><span class="text-gray-600">Ultra-soft 100% cotton</span></li>
-            </ul>
-          </div>
-        </div>
 
-        <div class="mt-10">
-          <h2 class="text-sm font-medium text-gray-900">Details</h2>
-
-          <div class="mt-4 space-y-6">
-            <p class="text-sm text-gray-600">The 6-Pack includes two black, two white, and two heather gray Basic Tees. Sign up for our subscription service and be the first to get new, exciting colors, like our upcoming &quot;Charcoal Gray&quot; limited release.</p>
-          </div>
-        </div>
       </div>
     </div>
   </div>
 </div>
 
+<div>
+    <footer class="bg-yellow-100 text-center text-amber-800">
+        <div class="p-8">
+            <section class="">
+                <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-facebook-f"></i>Facebook</a>
+                <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-twitter">Twitter</i></a>
+                <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-instagram"></i>Instagram</a>
+                <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-linkedin-in"></i>Linkedlin</a>
+                <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-github"></i>github</a>
+            </section>
+        </div>
+        <div class="text-center p-5" style="background-color: rgba(0, 0, 0, 0.2);">
+            @2024 Recommended
+        </div>
+    </footer>
+
+
+</div>
+
 
 </body>
 </html>
+```
