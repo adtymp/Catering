@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AboutContoller;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AdminDashController;
 use App\Http\Controllers\BannerController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UlasanController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\LoggedIn;
 use Illuminate\Auth\Events\Login;
@@ -32,6 +34,12 @@ Route::get('/detailProduct/{slug}', [DashboardController::class, 'detailProduct'
 Route::get('/products/category/{name}', [ProductController::class, 'showByCategory'])->name('products.category');
 
 Route::get('/products/under/{price}', [ProductController::class, 'showByPrice'])->name('products.under');
+
+Route::get('/about', [AboutContoller::class, 'index'])->name('about');
+
+Route::get('/ulasan', [UlasanController::class, 'index'])->name('ulasan');
+
+Route::get('/carapesan', [UlasanController::class, 'index'])->name('carapesan');
 
 Route::middleware(LoggedIn::class)->group(function () {
 
