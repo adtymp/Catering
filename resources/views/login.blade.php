@@ -15,9 +15,8 @@
         <div class="flex min-h-screen items-center justify-center p-6">
             <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
                 <div class="text-center mb-6">
-                    <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
-                        <i x-show="isLogin" class="fas fa-sign-in-alt text-red-600 fa-lg"></i>
-                        <i x-show="!isLogin" class="fas fa-user-plus text-red-600 fa-lg"></i>
+                    <div class="inline-flex items-center justify-center mb-4">
+                        <img src="{{ asset('logo/iconfullupdate (1).png') }}" alt="logo" class="w-40 h-40">
                     </div>
                     <h2 class="text-2xl font-bold text-gray-800">
                         <span x-text="isLogin ? 'Welcome Back!' : 'Create Account'"></span>
@@ -51,6 +50,13 @@
                     </div>
                     <button type="submit" class="w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700">Sign In</button>
                 </form>
+
+                <div class="justify-center flex p-2">
+                    <a href="{{ route('google_redirect') }}" class="bg-gradient-to-r from-blue-700 to-red-700 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-700">
+                        Login With Google
+                        <i class="fab fa-google ml-2"></i>
+                    </a>
+                </div>
 
                 <!-- REGISTER FORM -->
                 <form x-show="!isLogin" method="POST" action="{{ route('register') }}" class="space-y-5">

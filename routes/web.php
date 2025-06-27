@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AboutContoller;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminDashController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CartController;
@@ -19,6 +20,7 @@ use App\Http\Middleware\LoggedIn;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
 use Psy\TabCompletion\Matcher\FunctionsMatcher;
 
 use function Laravel\Prompts\search;
@@ -41,9 +43,12 @@ Route::get('/ulasan', [UlasanController::class, 'index'])->name('ulasan');
 
 Route::get('/carapesan', [UlasanController::class, 'index'])->name('carapesan');
 
+//Login With Google
+
+
 Route::middleware(LoggedIn::class)->group(function () {
 
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile')->middleware('role:customer');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile')->middleware(['role:customer']);
 
     Route::get('/address', [AddressController::class, 'index'])->name('address')->middleware('role:customer');
 
@@ -71,12 +76,25 @@ Route::middleware(LoggedIn::class)->group(function () {
 Route::middleware(AdminMiddleware::class)->group(function () {
     Route::get('/login', [LoginController::class, 'index'])->name('login');
     Route::post('/login/proses', [LoginController::class, 'login'])->name('admin.login.process');
+    Route::get('/auth-google-redirect', [LoginController::class, 'google_redirect'])->name('google_redirect');
+    Route::get('/google/auth-google-callback', [LoginController::class, 'google_callback']);
 });
 
 Route::middleware(LoggedIn::class)->prefix('admin')->group(function () {
     Route::get('/admindashboard', [AdminDashController::class, 'index'])->name('admindashboard')->middleware('role:admin');
 
     Route::get('/product', [ProductController::class, 'index'])->name('productroom')->middleware('role:admin');
+
+    Route::get('/adminroom', [AdminController::class, 'index'])->name('admin')->middleware('role:admin');
+
+    //Admin
+    Route::post('/admin/addAdmin', [AdminController::class, 'addAdmin'])->name('admin.admin.add')->middleware('role:admin');
+
+    Route::post('/admin/editAdmin/{id}', [AdminController::class, 'editAdmin'])->name('admin.admin.edit')->middleware('role:admin');
+
+    Route::post('/admin/updateAdmin/{id}', [AdminController::class, 'updateAdmin'])->name('admin.admin.update')->middleware('role:admin');
+
+    Route::post('/admin/deleteAdmin/{id}', [AdminController::class, 'deleteAdmin'])->name('admin.admin.delete')->middleware('role:admin');
 
     //Category
     Route::post('/product/addCategory', [CategoryController::class, 'addCategory'])->name('productroom.category.add')->middleware('role:admin');

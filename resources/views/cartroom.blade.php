@@ -22,17 +22,15 @@
             <h2 class="ml-5 text-3xl">Back</h2>
         </button>
     </a>
-    @if (session('error'))
-    <div class="bg-red-100 text-red-800 p-3 rounded mb-4 text-center">
-        {{ session('error') }}
-    </div>
-    @endif
 
     <form id="checkout-form" action="{{ route('payment.checkout') }}" method="GET">
         @csrf
         <div class="p-6 max-w-4xl mx-auto space-y-4 mb-32">
             <h1 class="text-3xl font-bold text-center mb-6">KERANJANGMU</h1>
-
+            <div class="flex items-center mb-2">
+                <input type="checkbox" id="select-all" class="mr-2">
+                <label for="select-all" class="text-gray-700 font-medium">Pilih Semua</label>
+            </div>
             @forelse ($carts as $cart)
             <div class="bg-white rounded-lg shadow-md p-4 flex gap-4 items-center">
                 <input type="checkbox" name="cart_items[]" value="{{ $cart->id }}" class="mt-2 select-cart-item">
@@ -60,12 +58,12 @@
                         </button>
                     </div>
                     <div class="flex justify-between items-center">
-                    <p class="font-bold text-red-500 line-clamp-2">Rp {{ number_format($cart->product->price * $cart->quantity, 0, ',', '.') }}</p>
-                    <div class="flex items-center mt-2 space-x-2">
-                        <button class="bg-gray-200 px-2 py-1 rounded">-</button>
-                        <span>{{ $cart->quantity }}</span>
-                        <button class="bg-gray-200 px-2 py-1 rounded">+</button>
-                    </div>
+                        <p class="font-bold text-red-500 line-clamp-2">Rp {{ number_format($cart->product->price * $cart->quantity, 0, ',', '.') }}</p>
+                        <div class="flex items-center mt-2 space-x-2">
+                            <button class="bg-gray-200 px-2 py-1 rounded">-</button>
+                            <span>{{ $cart->quantity }}</span>
+                            <button class="bg-gray-200 px-2 py-1 rounded">+</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -78,7 +76,6 @@
             @endguest
         </div>
 
-        <!-- FOOTER KERANJANG -->
         <div class="fixed bottom-0 w-full bg-white shadow-lg border-t border-gray-200 z-50">
             <div class="max-w-4xl mx-auto flex items-center justify-between">
                 <div class="p-4">
@@ -104,10 +101,10 @@
         const checkboxes = document.querySelectorAll('.select-cart-item');
         const totalDisplay = document.getElementById('totalHarga');
         const checkoutForm = document.getElementById('checkout-form');
+        const selectAllCheckbox = document.getElementById('select-all');
 
         const prices = @json($carts -> mapWithKeys(fn($c) => [$c -> id => $c -> product -> price * $c -> quantity]));
 
-        // Hitung total saat checkbox diubah
         function updateTotal() {
             let total = 0;
             checkboxes.forEach(cb => {
@@ -120,6 +117,12 @@
 
         checkboxes.forEach(cb => cb.addEventListener('change', updateTotal));
 
+        // "Select All"
+        selectAllCheckbox.addEventListener('change', function() {
+            checkboxes.forEach(cb => cb.checked = selectAllCheckbox.checked);
+            updateTotal();
+        });
+
         // Validasi sebelum submit
         checkoutForm.addEventListener('submit', function(e) {
             const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
@@ -129,14 +132,12 @@
             }
         });
 
-        // Fungsi untuk hapus item
         function submitDelete(cartId) {
             if (confirm('Yakin ingin menghapus item dari keranjang?')) {
                 document.getElementById(`delete-form-${cartId}`).submit();
             }
         }
     </script>
-
 </body>
 
 </html>

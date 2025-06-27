@@ -12,8 +12,8 @@
 
 <body x-data="{ sidebarOpen: true }" class="flex bg-gray-100">
     <x-sidebar></x-sidebar>
-    <div class="transition-all duration-300 p-4 pt-20 min-h-screen w-full"
-        :class="sidebarOpen ? 'pl-52' : 'pl-12'" class="h-screen absolute top-0 ml-48 p-2 w-full bg-gray-100">
+    <div class="transition-all duration-300 pt-20 min-h-screen w-full"
+        :class="sidebarOpen ? 'pl-60' : 'pl-12'" class="h-screen absolute top-0 ml-48 p-2 w-full bg-gray-100">
         <div x-data="{ selectedStatus: 'Permintaan' }">
             <div class="border-b-2 border-red-500 bg-white">
                 <div class="p-3 flex flex-wrap gap-2 justify-between">

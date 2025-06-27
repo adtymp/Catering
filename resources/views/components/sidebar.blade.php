@@ -3,7 +3,7 @@
     <div
         x-show="sidebarOpen"
         x-transition
-        class="h-screen w-48 fixed bg-gray-900 border-e-2 shadow-xl border-gray-200 z-30 text-white">
+        class="h-screen w-60 fixed bg-gray-900 border-e-2 shadow-xl border-gray-200 z-30 text-white">
         <!-- Sidebar content -->
         <div class="p-4 font-black">LOGO</div>
         <a href="admindashboard" class="relative flex items-center hover:text-white hover:bg-black p-2 ml-2">
@@ -12,7 +12,7 @@
             </svg>
             <h1 class="px-2">Dashboard</h1>
         </a>
-        <a href="" class="relative flex items-center hover:text-white hover:bg-black p-2 ml-2">
+        <a href="{{ route('admin') }}" class="relative flex items-center hover:text-white hover:bg-black p-2 ml-2">
             <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 448 512">
                 <path fill="#ffffff" d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z" />
             </svg>
@@ -41,21 +41,21 @@
         </form>
     </div>
 
-    <div class="flex-1" x-data="{ isOpen: false }">
+    <div class="flex" x-data="{ isOpen: false }">
         <button
             @click="sidebarOpen = !sidebarOpen"
-            class="fixed top-4 left-48 z-40 p-2 border-gray-200 shadow-xl transition-all duration-300"
-            :class="{ 'left-48': sidebarOpen, 'left-2': !sidebarOpen }">
-            <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 448 512">
+            class="fixed top-4 left-60 z-40 p-2 border-gray-200 shadow-xl transition-all duration-300"
+            :class="{ 'left-60': sidebarOpen, 'left-2': !sidebarOpen }">
+            <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 448 512">
                 <path fill="#ffffff" d="M0 96C0 78.3 14.3 64 32 64l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 128C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 288c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32L32 448c-17.7 0-32-14.3-32-32s14.3-32 32-32l384 0c17.7 0 32 14.3 32 32z" />
             </svg>
         </button>
 
         <div
             class="fixed top-0 right-0 h-16 bg-gray-900 shadow flex items-center justify-between px-4 transition-all duration-300 z-20 text-white"
-            :class="sidebarOpen ? 'ml-48 w-[calc(100%-12rem)]' : 'ml-0 w-full'">
+            :class="sidebarOpen ? 'ml-60 w-[calc(100%-12rem)]' : 'ml-0 w-full'">
 
-            <h1 class="pl-10 text-xl font-semibold">Dashboard</h1>
+            <h1 class="pl-24 text-xl font-semibold">Dashboard</h1>
 
             <div class="flex items-center space-x-2 mr-4">
                 @if (Auth::check())
@@ -95,35 +95,57 @@
                 </div>
             </div>
         </div>
+        <div class="fixed top-4 right-4 z-50 space-y-4">
+            {{-- Success Toast --}}
+            @if (session('success'))
+            <div
+                x-data="{ show: true }"
+                x-init="setTimeout(() => show = false, 4000)"
+                x-show="show"
+                x-transition
+                class="bg-green-100 border border-green-400 text-green-700 px-6 py-4 rounded shadow-lg relative w-80"
+                role="alert">
+                <strong class="font-bold">Sukses! </strong>
+                <span class="block sm:inline">{{ session('success') }}</span>
+                <button
+                    @click="show = false"
+                    class="absolute top-1 right-2 text-green-700">
+                    <svg class="fill-current h-5 w-5" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20">
+                        <title>Close</title>
+                        <path d="M14.348 5.652a1 1 0 0 0-1.414 0L10 8.586 7.066 5.652a1 1 0 1 0-1.414 1.414L8.586 10l-2.934 2.934a1 1 0 1 0 1.414 1.414L10 11.414l2.934 2.934a1 1 0 0 0 1.414-1.414L11.414 10l2.934-2.934a1 1 0 0 0 0-1.414z" />
+                    </svg>
+                </button>
+            </div>
+            @endif
+
+            {{-- Error Toast --}}
+            @if ($errors->any())
+            <div
+                x-data="{ show: true }"
+                x-init="setTimeout(() => show = false, 6000)"
+                x-show="show"
+                x-transition
+                class="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded shadow-lg relative w-80"
+                role="alert">
+                <strong class="font-bold">Terjadi kesalahan:</strong>
+                <ul class="list-disc pl-5 text-sm mt-1">
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button
+                    @click="show = false"
+                    class="absolute top-1 right-2 text-red-700">
+                    <svg class="fill-current h-5 w-5" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20">
+                        <title>Close</title>
+                        <path d="M14.348 5.652a1 1 0 0 0-1.414 0L10 8.586 7.066 5.652a1 1 0 1 0-1.414 1.414L8.586 10l-2.934 2.934a1 1 0 1 0 1.414 1.414L10 11.414l2.934 2.934a1 1 0 0 0 1.414-1.414L11.414 10l2.934-2.934a1 1 0 0 0 0-1.414z" />
+                    </svg>
+                </button>
+            </div>
+            @endif
+        </div>
+
     </div>
 </div>
-@if (session('success'))
-<div
-    x-data="{ show: true }"
-    x-init="setTimeout(() => show = false, 4000)"
-    x-show="show"
-    x-transition
-    class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4"
-    role="alert">
-    <strong class="font-bold">Sukses! </strong>
-    <span class="block sm:inline">{{ session('success') }}</span>
-    <button
-        @click="show = false"
-        class="absolute top-0 bottom-0 right-0 px-4 py-3 text-green-700">
-        <svg class="fill-current h-6 w-6" role="button" xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20">
-            <title>Close</title>
-            <path d="M14.348 5.652a1 1 0 0 0-1.414 0L10 8.586 7.066 5.652a1 1 0 1 0-1.414 1.414L8.586 10l-2.934 2.934a1 1 0 1 0 1.414 1.414L10 11.414l2.934 2.934a1 1 0 0 0 1.414-1.414L11.414 10l2.934-2.934a1 1 0 0 0 0-1.414z" />
-        </svg>
-    </button>
-</div>
-@endif
-@if($errors->any())
-<div class="text-center text-red-600 alert alert-danger">
-    <ul>
-        @foreach($errors->all() as $error)
-        <li>{{ $error }}</li>
-        @endforeach
-    </ul>
-</div>
-@endif

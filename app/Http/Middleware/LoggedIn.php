@@ -17,9 +17,7 @@ class LoggedIn
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $loginStatus = Session::get('loginStatus');
-        $user = Auth::user();
-        if($loginStatus == FALSE || !$loginStatus){
+        if (!Auth::check()) {
             return redirect()->route('login');
         }
         return $next($request);

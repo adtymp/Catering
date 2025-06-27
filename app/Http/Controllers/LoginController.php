@@ -6,15 +6,18 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Rules\CekLogin;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Laravel\Socialite\Facades\Socialite;
 
 class LoginController extends Controller
 {
-    function index()
+    public function index()
     {
         return view('login');
     }
-    function login(Request $request)
+
+    public function login(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
@@ -41,8 +44,7 @@ class LoginController extends Controller
         }
     }
 
-
-    function regis(Request $request)
+    public function regis(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -62,7 +64,42 @@ class LoginController extends Controller
         }
     }
 
-    function logout()
+    public function google_redirect()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function google_callback()
+    {
+        try {
+            $user = Socialite::driver('google')->user();
+            $finduser = User::where('google_id', $user->id)->first();
+
+            if ($finduser) {
+                Auth::login($finduser);
+                return redirect()->intended('/');
+            } else {
+                $newUser = new User();
+                $newUser->name = $user->name;
+                $newUser->email = $user->email;
+                $newUser->google_id = $user->id;
+                $newUser->password = encrypt('123456dummy');
+
+                if ($newUser->save()) {
+                    $newUser->assignRole('customer');
+                    Auth::login($newUser);
+                    return redirect()->intended('/');
+                } else {
+                    return back()->withErrors('Gagal menyimpan User');
+                }
+            }
+        } catch (\Exception $e) {
+            dd($e);
+        }
+    }
+
+
+    public function logout()
     {
         Session::forget('loginStatus');
         Auth::logout();

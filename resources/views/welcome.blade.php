@@ -14,6 +14,10 @@
 
 <body>
     <x-navbar :categories="$categories" :cartCount="$cartCount" />
+
+    <!--search-->
+    <x-search></x-search>
+    
     <!--SlideShow-->
     <div class="pb-10 max-w-6xl mx-auto relative overflow-hidden"
         x-data="{
@@ -81,8 +85,7 @@
         </div>
     </div>
 
-    <!--search-->
-    <x-search></x-search>
+
     <!--main-->
     <!-- Paket -->
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 border-b-4 border-red-200">
@@ -101,7 +104,7 @@
             @endforeach
         </div>
         <div class="mt-10 flex justify-center">
-            <a href="{{ route('products.category', ['name' => 'Paket']) }}" class="inline-block w-full sm:w-48 text-center text-white font-semibold bg-red-600 hover:bg-white hover:text-red-600 border-2 border-red-600 py-3 rounded-lg transition duration-300 ease-in-out shadow">
+            <a href="{{ route('products.category', ['name' => 'Paket']) }}" class="inline-block w-full sm:w-48 text-center text-white font-semibold bg-red-600 hover:bg-white hover:text-red-600 border-2 border-red-600 py-3 rounded-full transition duration-300 ease-in-out shadow">
                 Show All
             </a>
         </div>
@@ -123,7 +126,7 @@
                 @endforeach
         </div>
         <div class="mt-10 flex justify-center">
-            <a href="{{ route('products.under', ['price' => 20000]) }}" class="inline-block w-full sm:w-48 text-center text-white font-semibold bg-red-600 hover:bg-white hover:text-red-600 border-2 border-red-600 py-3 rounded-lg transition duration-300 ease-in-out shadow">
+            <a href="{{ route('products.under', ['price' => 20000]) }}" class="inline-block w-full sm:w-48 text-center text-white font-semibold bg-red-600 hover:bg-white hover:text-red-600 border-2 border-red-600 py-3 rounded-full transition duration-300 ease-in-out shadow">
                 Show All
             </a>
         </div>
@@ -145,7 +148,7 @@
             @endforeach
         </div>
         <div class="mt-10 flex justify-center">
-            <a href="{{ route('products.category', ['name' => 'Nasi Kotak']) }}" class="inline-block w-full sm:w-48 text-center text-white font-semibold bg-red-600 hover:bg-white hover:text-red-600 border-2 border-red-600 py-3 rounded-lg transition duration-300 ease-in-out shadow">
+            <a href="{{ route('products.category', ['name' => 'Nasi Kotak']) }}" class="inline-block w-full sm:w-48 text-center text-white font-semibold bg-red-600 hover:bg-white hover:text-red-600 border-2 border-red-600 py-3 rounded-full transition duration-300 ease-in-out shadow">
                 Show All
             </a>
         </div>

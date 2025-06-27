@@ -13,7 +13,7 @@
     <x-sidebar></x-sidebar>
     <!--main-->
     <div class="transition-all duration-300 p-4 pt-20"
-        :class="sidebarOpen ? 'pl-52' : 'pl-12'" class="h-screen absolute top-0 ml-48 p-2 w-full bg-gray-100">
+        :class="sidebarOpen ? 'pl-60' : 'pl-12'" class="h-screen absolute top-0 ml-48 p-2 w-full bg-gray-100">
         <!-- Container besar -->
         <div class="flex flex-col md:flex-row gap-6 p-4">
 
