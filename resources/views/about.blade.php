@@ -9,7 +9,7 @@
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <title>CartRoom</title>
+  <title>Tentang Kami</title>
 </head>
 
 <body>
@@ -48,22 +48,22 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     
                     {{-- Gambar kiri --}}
-                    <div class="aspect-[4/5] rounded-lg bg-gray-200 overflow-hidden">
+                    <div class="aspect-[4/5] rounded-lg bg-gray-200 overflow-hidden hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.02] transition-all duration-300">
                         <img src="https://1.bp.blogspot.com/-_72emwM-7uE/XrPi-4DtFvI/AAAAAAAAG8Y/rByYTDh5MkcxFNZwMEcYRgT1057GYbggwCLcBGAsYHQ/s1600/aneka-resep-kue-kering-untuk-lebaran-2020-unik-dan-cantik.jpg" alt="Kue Kering" class="w-full h-full object-cover" onerror="this.style.display='none'" />
                     </div>
 
                     {{-- Gambar tengah --}}
                     <div class="grid grid-cols-1 gap-4">
-                        <div class="aspect-[3/2] rounded-lg bg-gray-200 overflow-hidden">
+                        <div class="aspect-[3/2] rounded-lg bg-gray-200 overflow-hidden hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.02] transition-all duration-300">
                             <img src="https://data.1freewallpapers.com/download/delicious-food-1440x900.jpg" alt="Makanan Lezat" class="w-full h-full object-cover" onerror="this.style.display='none'" />
                         </div>
-                        <div class="aspect-[3/2] rounded-lg bg-gray-200 overflow-hidden">
+                        <div class="aspect-[3/2] rounded-lg bg-gray-200 overflow-hidden hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.02] transition-all duration-300">
                             <img src="http://3.bp.blogspot.com/-33ZL0bTeBzU/Vmt3xtEF1XI/AAAAAAAAlts/Mg00d0UF5RI/s1600/traditional-indonesian-food.jpg" alt="Makanan Tradisional" class="w-full h-full object-cover" onerror="this.style.display='none'" />
                         </div>
                     </div>
 
                     {{-- Gambar kanan --}}
-                    <div class="aspect-[4/5] rounded-lg bg-gray-200 overflow-hidden">
+                    <div class="aspect-[4/5] rounded-lg bg-gray-200 overflow-hidden hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.02] transition-all duration-300">
                         <img src="https://wallpapercave.com/wp/wp10277289.jpg" alt="Makanan Penutup" class="w-full h-full object-cover" onerror="this.style.display='none'" />
                     </div>
                 </div>

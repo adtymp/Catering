@@ -41,7 +41,7 @@ Route::get('/about', [AboutContoller::class, 'index'])->name('about');
 
 Route::get('/ulasan', [UlasanController::class, 'index'])->name('ulasan');
 
-Route::get('/carapesan', [UlasanController::class, 'index'])->name('carapesan');
+// Route::get('/carapesan', [UlasanController::class, 'index1'])->name('carapesan');
 
 //Login With Google
 
@@ -71,6 +71,8 @@ Route::middleware(LoggedIn::class)->group(function () {
     Route::post('/cart/delete/{id}', [CartController::class, 'deleteCart'])->name('cart.delete')->middleware('role:customer');
 
     Route::get('/detailpesanan/{idPesanan}', [OrderController::class, 'detailPesanan'])->name('detailpesanan')->middleware('role:customer');
+
+    Route::post('/ulasan/addUlasan', [UlasanController::class, 'addUlasan'])->name('ulasan.add')->middleware('role:customer');
 });
 
 Route::middleware(AdminMiddleware::class)->group(function () {

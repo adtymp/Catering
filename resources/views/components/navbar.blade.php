@@ -37,7 +37,7 @@
 
 
                         <!-- Menu lainnya -->
-                        <a href="{{ route('carapesan') }}" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-red-800 hover:bg-yellow-300">Cara Pesan</a>
+                        <a href="" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-red-800 hover:bg-yellow-300">Cara Pesan</a>
                         <a href="{{ route('ulasan') }}" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-red-800 hover:bg-yellow-300">Ulasan</a>
                         <a href="{{ route('about') }}" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-red-800 hover:bg-yellow-300">Tentang Kami</a>
                     </div>
@@ -83,20 +83,20 @@
 
                             <!-- Your Profile -->
                             @auth
-                            <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm text-black hover:bg-red-600 hover:text-white" role="menuitem" tabindex="-1">Your Profile</a>
+                            <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm text-black hover:bg-red-600 hover:text-white hover:rounded-t-md" role="menuitem" tabindex="-1">Your Profile</a>
                             <!-- Settings -->
                             <a href="{{ route('order') }}" class="block px-4 py-2 text-sm text-black hover:bg-red-600 hover:text-white" role="menuitem" tabindex="-1">Lihat Pesanan</a>
                             <!-- Logout -->
                             <form method="POST" action="{{ route('logout') }}" class="block">
                                 @csrf
-                                <button type="submit" class="block px-4 py-2 text-sm text-black hover:bg-red-600 hover:text-white w-full text-left" role="menuitem" tabindex="-1">
+                                <button type="submit" class="block px-4 py-2 text-sm text-black hover:bg-red-600 hover:text-white w-full text-left hover:rounded-b-md" role="menuitem" tabindex="-1">
                                     Sign out
                                 </button>
                             </form>
                             @endauth
 
                             @guest
-                            <a href="{{ route('login') }}" class="block px-4 py-2 text-sm text-black hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Login</a>
+                            <a href="{{ route('login') }}" class="block px-4 py-2 text-sm text-black hover:text-white hover:bg-red-800 hover:rounded-md" role="menuitem" tabindex="-1">Login</a>
                             @endguest
                         </div>
                     </div>
@@ -104,7 +104,7 @@
             </div>
             <div class="-mr-2 flex md:hidden">
                 <!-- Mobile menu button -->
-                <button type="button" @click="isOpen = !isOpen" class="relative inline-flex items-center justify-center rounded-md bg-red-800 p-2 text-black hover:bg-yellow-300 hover:text-red-800  ring-2 ring-yellow-300" aria-controls="mobile-menu" aria-expanded="false">
+                <button type="button" @click="isOpen = !isOpen" class="relative inline-flex items-center justify-center rounded-md bg-white p-2 text-red-800 hover:bg-red-700 hover:text-white  ring-2 ring-red-700" aria-controls="mobile-menu" aria-expanded="false">
                     <span class="absolute -inset-0.5"></span>
                     <span class="sr-only">Open main menu</span>
                     <!-- Menu open: "hidden", Menu closed: "block" -->
@@ -125,12 +125,12 @@
         <div class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
             <!-- Current: "bg-gray-900 text-white", Default: "text-white hover:bg-gray-700 hover:text-white" -->
             <!-- <a href="#" class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white" aria-current="page">Dashboard</a> -->
-            <button class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-red-800 hover:bg-yellow-300">Menu</button>
-            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-red-800 hover:bg-yellow-300">Cara Pesan</a>
-            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-red-800 hover:bg-yellow-300">Ulasan</a>
-            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-red-800 hover:bg-yellow-300">Tentang Kami</a>
+            <button class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-white hover:bg-red-800">Menu</button>
+            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-white hover:bg-red-800">Cara Pesan</a>
+            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-white hover:bg-red-800">Ulasan</a>
+            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-white hover:bg-red-800">Tentang Kami</a>
         </div>
-        <div class="border-t border-yellow-300 pb-3 pt-4">
+        <div class="border-t border-red-700 pb-3 pt-4">
             <div class="flex items-center px-5 justify-between">
                 <!-- <div class="shrink-0">
                     <img class="size-10 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
@@ -154,14 +154,14 @@
             </div>
             <div class="space-y-1 px-2">
                 @auth
-                <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm text-black hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Your Profile</a>
-                <a href="{{ route('order') }}" class="block px-4 py-2 text-sm text-black hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Lihat Pesanan</a>
+                <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm  text-black hover:bg-red-700 hover:text-white" role="menuitem" tabindex="-1">Your Profile</a>
+                <a href="{{ route('order') }}" class="block px-4 py-2 text-sm  text-black hover:bg-red-700 hover:text-white" role="menuitem" tabindex="-1">Lihat Pesanan</a>
                 <form method="POST" action="{{ route('logout') }}" class="block">
                     @csrf
-                    <button type="submit" class="block px-4 py-2 text-sm text-black hover:bg-yellow-300 hover:text-red-800 w-full text-left" role="menuitem" tabindex="-1">Sign out</button>
+                    <button type="submit" class="block px-4 py-2 text-sm  text-black hover:bg-red-700 hover:text-white w-full text-left" role="menuitem" tabindex="-1">Sign out</button>
                 </form>
                 @else
-                <a href="#" class="block px-4 py-2 text-sm text-black hover:bg-yellow-300 hover:text-red-800" role="menuitem" tabindex="-1">Login</a>
+                <a href="#" class="block px-4 py-2 text-sm text-black hover:bg-red-700 hover:text-white" role="menuitem" tabindex="-1">Login</a>
                 @endauth
             </div>
         </div>
