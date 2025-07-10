@@ -91,30 +91,30 @@
                         <input type="email" name="email" placeholder="Masukkan Email" value="{{ old('name', $user->email ?? '') }}" class="px-4 py-2.5 w-full text-sm outline-none" readonly />
                     </div>
                     <div>
-                        <label class="text-sm font-medium block mb-2">No. Telepon</label>
+                        <label class="text-sm font-medium block mb-2">No. Telepon <span class="text-gray-600">(Gunakan nomor yang terdaftar ke whatssapp)</span></label>
                         <input type="text" name="no_hp" placeholder="Masukkan No.Telepon" class="px-4 py-2.5 border border-gray-400 w-full text-sm rounded-md focus:outline-blue-600" />
                     </div>
                     <div>
                         <label class="text-sm font-medium block mb-2">Kecamatan</label>
                         <input type="text" name="kecamatan" placeholder="Masukkan Kecamatan" class="px-4 py-2.5 border border-gray-400 w-full text-sm rounded-md focus:outline-blue-600" />
                     </div>
-                    <div x-data="locationPicker()" x-init="init()" class="space-y-4 relative mb-4">
+                    <div x-data="alamatMap()" x-init="init()" class="space-y-4 relative mb-4">
                         <div class="relative">
                             <label class="text-sm font-medium block mb-2">Alamat</label>
+                            <!-- @focus="showSuggestions = true"
+                                @click.outside="showSuggestions = false" -->
                             <input
                                 type="text"
                                 x-model="address"
                                 name="address"
                                 @input.debounce.1000ms="searchAddress()"
                                 @keydown.enter.prevent="suggestions.length && selectSuggestion(suggestions[0])"
-                                @focus="showSuggestions = true"
-                                @click.outside="showSuggestions = false"
                                 placeholder="Ketik atau klik peta"
                                 class="px-4 py-2.5 border border-gray-400 w-full text-sm rounded-md focus:outline-blue-600">
 
                             <!-- Dropdown saran alamat -->
                             <ul x-show="showSuggestions && suggestions.length"
-                                class="absolute z-[999] bg-white border border-gray-300 mt-1 w-full rounded-md shadow-lg text-sm">
+                                class="absolute z-[999] bg-white border border-gray-300 mt-1 w-full rounded-md shadow-lg text-sm max-h-60 overflow-y-auto">
                                 <template x-for="item in suggestions" :key="item.place_id">
                                     <li @click="selectSuggestion(item)"
                                         class="px-4 py-2 hover:bg-blue-100 cursor-pointer"
@@ -125,6 +125,9 @@
                         </div>
                         <!-- Map -->
                         <div id="map" class="h-64 w-full rounded border relative z-0"></div>
+
+                        <input type="hidden" name="latitude" :value="lat">
+                        <input type="hidden" name="longitude" :value="lng">
                     </div>
                     <div>
                         <label class="text-sm font-medium block mb-2">Label</label>
@@ -137,8 +140,6 @@
                     <div>
                         <label class="px-4 py-2.5 w-full text-sm"><input class="focus:outline-none focus:ring-0" type="checkbox" name="is_default"> Jadikan alamat utama</label>
                     </div>
-                    <input type="hidden" name="latitude" value="">
-                    <input type="hidden" name="longitude" value="">
                 </div>
                 <div class="max-w-xl w-full">
                     <div class="mb-4">
@@ -154,107 +155,93 @@
     </div>
     <script>
         const LOCATIONIQ_API_KEY = "{{ env('LOCATIONIQ_API_KEY') }}";
-    </script>
-    <script>
-        function locationPicker() {
+
+        function alamatMap() {
             return {
                 map: null,
                 marker: null,
-                lat: -7.271307,
-                lng: 112.762703,
+                lat: null,
+                lng: null,
                 address: '',
-                suggestions: [],
-                showSuggestions: false,
 
                 init() {
-                    this.map = L.map('map').setView([this.lat, this.lng], 13);
-
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '© OpenStreetMap'
-                    }).addTo(this.map);
-
-                    this.marker = L.marker([this.lat, this.lng], {
-                        draggable: true
-                    }).addTo(this.map);
-
-                    this.marker.on('dragend', (e) => {
-                        const pos = e.target.getLatLng();
-                        this.lat = pos.lat;
-                        this.lng = pos.lng;
-                        this.reverseGeocode();
-                    });
-
-                    this.map.on('click', (e) => {
-                        this.lat = e.latlng.lat;
-                        this.lng = e.latlng.lng;
-                        this.marker.setLatLng([this.lat, this.lng]);
-                        this.reverseGeocode();
-                    });
-
                     if (navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition((position) => {
+                        navigator.geolocation.getCurrentPosition(position => {
                             this.lat = position.coords.latitude;
                             this.lng = position.coords.longitude;
-                            this.map.setView([this.lat, this.lng], 15);
-                            this.marker.setLatLng([this.lat, this.lng]);
-                            this.reverseGeocode();
+
+                            this.initMap();
+                            this.updateMarker(this.lat, this.lng);
+                            this.reverseGeocode(this.lat, this.lng);
+                        }, () => {
+                            this.lat = -6.200000;
+                            this.lng = 106.816666;
+                            this.initMap();
+                            this.updateMarker(this.lat, this.lng);
                         });
-                    } else {
-                        this.reverseGeocode();
                     }
-                    this.$watch('lat', value => {
-                        const input = document.querySelector('input[name="latitude"]');
-                        if (input) input.value = value;
-                    });
+                },
 
-                    this.$watch('lng', value => {
-                        const input = document.querySelector('input[name="longitude"]');
-                        if (input) input.value = value;
-                    });
+                initMap() {
+                    this.map = L.map('map').setView([this.lat, this.lng], 15);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; OpenStreetMap contributors'
+                    }).addTo(this.map);
 
-                    this.map.whenReady(() => {
-                        setTimeout(() => {
-                            this.map.invalidateSize();
-                        }, 500);
+                    this.map.on('click', e => {
+                        this.lat = e.latlng.lat;
+                        this.lng = e.latlng.lng;
+                        this.updateMarker(this.lat, this.lng);
+                        this.reverseGeocode(this.lat, this.lng);
                     });
                 },
 
-                async reverseGeocode() {
+                updateMarker(lat, lng) {
+                    if (this.marker) {
+                        this.marker.setLatLng([lat, lng]);
+                    } else {
+                        this.marker = L.marker([lat, lng], {
+                            draggable: true
+                        }).addTo(this.map);
+
+                        this.marker.on('dragend', (e) => {
+                            const pos = e.target.getLatLng();
+                            this.lat = pos.lat;
+                            this.lng = pos.lng;
+                            this.reverseGeocode(this.lat, this.lng);
+                        });
+                    }
+                    this.map.setView([lat, lng], 15);
+                },
+
+                async reverseGeocode(lat, lng) {
                     try {
-                        const res = await fetch(`https://us1.locationiq.com/v1/reverse?key=${LOCATIONIQ_API_KEY}&lat=${this.lat}&lon=${this.lng}&format=json`);
+                        const res = await fetch(`https://us1.locationiq.com/v1/reverse?key=${LOCATIONIQ_API_KEY}&lat=${lat}&lon=${lng}&format=json`);
                         const data = await res.json();
                         this.address = data.display_name || '';
                     } catch (e) {
-                        console.error('Reverse geocode error', e);
+                        console.error("Reverse geocode error", e);
                     }
                 },
 
                 async searchAddress() {
-                    if (!this.address || this.address.length < 3) return;
-
                     try {
-                        const res = await fetch(`https://us1.locationiq.com/v1/search?key=${LOCATIONIQ_API_KEY}&q=${encodeURIComponent(this.address)}&countrycodes=id&format=json`);
-                        const data = await res.json();
-                        this.suggestions = data || [];
-                        this.showSuggestions = true;
+                        if (!this.address) return;
 
-                        if (this.suggestions.length === 1) {
-                            this.selectSuggestion(this.suggestions[0]);
+                        const res = await fetch(`https://us1.locationiq.com/v1/search.php?key=${LOCATIONIQ_API_KEY}&q=${encodeURIComponent(this.address)}&format=json`);
+                        const results = await res.json();
+                        if (results && results.length > 0) {
+                            this.lat = parseFloat(results[0].lat);
+                            this.lng = parseFloat(results[0].lon);
+                            this.updateMarker(this.lat, this.lng);
+                        } else {
+                            alert('Alamat tidak ditemukan');
                         }
                     } catch (e) {
-                        console.error('Search failed', e);
-                        this.suggestions = [];
+                        console.error("Search address error", e);
                     }
-                },
-
-                selectSuggestion(item) {
-                    this.lat = parseFloat(item.lat);
-                    this.lng = parseFloat(item.lon);
-                    this.map.setView([this.lat, this.lng], 15);
-                    this.marker.setLatLng([this.lat, this.lng]);
-                    this.showSuggestions = false;
                 }
-            };
+            }
         }
     </script>
 </body>

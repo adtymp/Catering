@@ -146,6 +146,10 @@
                         <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-md text-sm">Terapkan</button>
                     </div>
                 </div>
+                <div class="mb-4">
+                    <label class="text-sm font-medium block mb-4 mt-4">Catatan</label>
+                    <textarea name="note" placeholder="Bungkus plastik saja" class="px-4 py-2.5 border border-gray-400 w-full text-sm rounded-md focus:outline-blue-600"></textarea>
+                </div>
             </div>
 
             <!-- Right: Ringkasan Pesanan -->
@@ -322,7 +326,6 @@
             }
         }
     </script>
-
 </body>
 
 </html>

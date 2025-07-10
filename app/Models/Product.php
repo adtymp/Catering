@@ -21,4 +21,8 @@ class Product extends Model
             ->generateSlugsFrom('name')
             ->saveSlugsTo('slug');
     }
+    public function productRates()
+{
+    return $this->hasMany(ProductRate::class);
+}
 }

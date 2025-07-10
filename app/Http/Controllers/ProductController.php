@@ -56,6 +56,7 @@ class ProductController extends Controller
             'deskripsi' => 'required|string|max:255',
             'kategori' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
+            'minPax' => 'required|numeric|min:1',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -70,6 +71,7 @@ class ProductController extends Controller
         $product->name = $request->name;
         $product->deskripsi = $request->deskripsi;
         $product->price = $request->price;
+        $product->minPax = $request->minPax;
         $product->category_id = $request->kategori;
         $product->image = $imageProduct;
 
@@ -91,6 +93,7 @@ class ProductController extends Controller
             'deskripsi' => 'required|string|max:255',
             'kategori' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
+            'minPax' => 'required|numeric|min:1',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -98,6 +101,7 @@ class ProductController extends Controller
         $product->name = $request->name;
         $product->deskripsi = $request->deskripsi;
         $product->price = $request->price;
+        $product->minPax = $request->minPax;
         $product->category_id = $request->kategori;
 
         if ($request->hasFile('image')) {
@@ -108,7 +112,7 @@ class ProductController extends Controller
 
 
         if ($product->save()) {
-            return redirect()->route('productroom');
+            return redirect()->route('productroom')->with('success', 'Produk "' . $product->name . '" berhasil di Update.');
         } else {
             return back()->withErrors('Gagal menyimpan Produk');
         }
@@ -143,6 +147,7 @@ class ProductController extends Controller
     {
         $cartCount = Auth::check() ? Cart::where('user_id', Auth::id())->count() : 0;
         $products = Product::with('category')
+            ->withAvg('productRates as average_rating', 'rate')
             ->whereHas('category', function ($query) use ($name) {
                 $query->where('name', $name);
             })->get();
@@ -154,7 +159,7 @@ class ProductController extends Controller
 
     public function showByPrice($price)
     {
-        $products = Product::with('category')->where('price', '<=', $price)->get();
+        $products = Product::with('category')->withAvg('productRates as average_rating', 'rate')->where('price', '<=', $price)->get();
         $categories = Category::all();
         $cartCount = Auth::check() ? Cart::where('user_id', Auth::id())->count() : 0;
 

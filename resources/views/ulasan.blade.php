@@ -197,28 +197,28 @@
                     <!-- Rating Stars -->
                     <div
                         x-data="{
-        rating: 0,
-        tempRating: 0,
-        icons: [1,2,3,4,5],
-        rate(i) {
-            this.rating = i;
-        },
-        mouseOver(i) {
-            this.tempRating = i;
-        },
-        mouseOut() {
-            this.tempRating = 0;
-        },
-        getColor(i) {
-            if (this.tempRating >= i) {
-                return 'text-yellow-400';
-            } else if (this.rating >= i) {
-                return 'text-yellow-400';
-            } else {
-                return 'text-gray-300';
-            }
-        }
-    }"
+                        rating: 0,
+                        tempRating: 0,
+                        icons: [1,2,3,4,5],
+                        rate(i) {
+                        this.rating = i;
+                            },
+                            mouseOver(i) {
+                                this.tempRating = i;
+                            },
+                            mouseOut() {
+                                this.tempRating = 0;
+                            },
+                            getColor(i) {
+                                if (this.tempRating >= i) {
+                                    return 'text-yellow-400';
+                                } else if (this.rating >= i) {
+                                    return 'text-yellow-400';
+                                } else {
+                                    return 'text-gray-300';
+                                }
+                            }
+                        }"
                         class="flex items-center">
                         <template x-for="i in icons" :key="i">
                             <button

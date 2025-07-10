@@ -126,42 +126,75 @@
                 </ul>
                 <div class="mt-3">
                     @if ($payments->status == 'Permintaan')
-                    <div class="flex justify-end">
-                        <form action="{{ route('adminDetailPesanan.update', ['id' => $payments->id, 'status' => 'Dibatalkan']) }}" method="POST" class="mr-4">
-                            @csrf
-                            <button type="submit" class="w-40 h-12 bg-red-600 hover:bg-white border-2 hover:border-red-500 font-semibold text-lg text-white hover:text-red-500 rounded-lg transition duration-300">
-                                Di Batalkan
-                            </button>
-                        </form>
+                    <div x-data="{ showModalAdmin: false }" class="flex justify-end space-x-4">
+                        {{-- Tombol Batalkan --}}
+                        <button @click="showModalAdmin = true"
+                            class="w-40 h-12 bg-red-600 hover:bg-white border-2 hover:border-red-500 font-semibold text-lg text-white hover:text-red-500 rounded-lg transition duration-300">
+                            Batalkan
+                        </button>
+
+                        {{-- Tombol Diterima --}}
                         <form action="{{ route('adminDetailPesanan.update', ['id' => $payments->id, 'status' => 'Diterima']) }}" method="POST">
                             @csrf
-                            <button type="submit" class="w-40 h-12 bg-blue-600 hover:bg-white border-2 hover:border-blue-500 font-semibold text-lg text-white hover:text-blue-500 rounded-lg transition duration-300">Di Terima</button>
+                            <button type="submit"
+                                class="w-40 h-12 bg-blue-600 hover:bg-white border-2 hover:border-blue-500 font-semibold text-lg text-white hover:text-blue-500 rounded-lg transition duration-300">
+                                Diterima
+                            </button>
                         </form>
+
+                        {{-- Modal Alasan Pembatalan (Admin) --}}
+                        <div x-show="showModalAdmin"
+                            class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center"
+                            x-transition>
+                            <div class="bg-white rounded-lg shadow-md w-full max-w-md p-6">
+                                <h2 class="text-lg font-semibold mb-4 text-center">Alasan Pembatalan (Admin)</h2>
+
+                                <form method="POST"
+                                    action="{{ route('adminDetailPesanan.update', ['id' => $payments->id, 'status' => 'Dibatalkan']) }}">
+                                    @csrf
+
+                                    <label class="block mb-2 text-sm font-medium">Pilih Alasan:</label>
+                                    <select name="cancel_reason" required class="w-full border rounded px-3 py-2 mb-4">
+                                        <option value="">-- Pilih Alasan --</option>
+                                        <option value="Nominal transfer tidak sesuai">Nominal transfer tidak sesuai</option>
+                                        <option value="Alamat tidak jelas / tidak lengkap">Alamat tidak jelas / tidak lengkap</option>
+                                        <option value="Bukti transfer tidak valid">Bukti transfer tidak valid</option>
+                                        <option value="Lainnya">Lainnya</option>
+                                    </select>
+
+                                    <div class="flex justify-between">
+                                        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">Kirim</button>
+                                        <button type="button" @click="showModalAdmin = false" class="text-gray-500 hover:text-red-600">Batal</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                     @elseif ($payments->status == 'Diterima')
+                    {{-- Tombol: Proses --}}
                     <div class="flex justify-end p-3">
                         <form action="{{ route('adminDetailPesanan.update', ['id' => $payments->id, 'status' => 'Proses']) }}" method="POST">
                             @csrf
-                            <button type="submit" class="w-40 h-12 bg-blue-600 hover:bg-white border-2 hover:border-blue-500 font-semibold text-lg text-white hover:text-blue-500 rounded-lg transition duration-300">Proses</button>
+                            <button type="submit" class="w-40 h-12 bg-blue-600 hover:bg-white border-2 hover:border-blue-500 font-semibold text-lg text-white hover:text-blue-500 rounded-lg transition duration-300">
+                                Proses
+                            </button>
                         </form>
                     </div>
+
                     @elseif ($payments->status == 'Proses')
-                    @if ($payments->shipping_method == 'antar')
+                    {{-- Pilih Siap Diantar atau Siap Diambil --}}
                     <div class="flex justify-end p-3">
-                        <form action="{{ route('adminDetailPesanan.update', ['id' => $payments->id, 'status' => 'Siap Diantar']) }}" method="POST">
+                        <form action="{{ route('adminDetailPesanan.update', ['id' => $payments->id, 'status' => $payments->shipping_method == 'antar' ? 'Siap Diantar' : 'Siap Diambil']) }}" method="POST">
                             @csrf
-                            <button type="submit" class="w-40 h-12 bg-blue-600 hover:bg-white border-2 hover:border-blue-500 font-semibold text-lg text-white hover:text-blue-500 rounded-lg transition duration-300">Siap Diantar</button>
+                            <button type="submit" class="w-40 h-12 bg-blue-600 hover:bg-white border-2 hover:border-blue-500 font-semibold text-lg text-white hover:text-blue-500 rounded-lg transition duration-300">
+                                {{ $payments->shipping_method == 'antar' ? 'Siap Diantar' : 'Siap Diambil' }}
+                            </button>
                         </form>
                     </div>
-                    @else
-                    <div class="flex justify-end p-3">
-                        <form action="{{ route('adminDetailPesanan.update', ['id' => $payments->id, 'status' => 'Siap Diambil']) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="w-40 h-12 bg-blue-600 hover:bg-white border-2 hover:border-blue-500 font-semibold text-lg text-white hover:text-blue-500 rounded-lg transition duration-300">Siap Diambil</button>
-                        </form>
-                    </div>
-                    @endif
+
                     @elseif ($payments->status == 'Siap Diantar' || $payments->status == 'Siap Diambil')
+                    {{-- Admin klik selesai (jika belum) --}}
+                    @if (!$payments->admin_done)
                     <div class="flex justify-end p-3">
                         <form action="{{ route('adminDetailPesanan.update', ['id' => $payments->id, 'status' => 'Selesai']) }}" method="POST">
                             @csrf
@@ -171,14 +204,27 @@
                         </form>
                     </div>
                     @else
-                    <div class="flex justify-end p-3">
+                    <p class="text-sm text-yellow-500 text-right pr-4">Menunggu konfirmasi pelanggan...</p>
+                    @endif
+
+                    @elseif ($payments->status == 'Dibatalkan')
+                    {{-- Pesanan sudah dibatalkan --}}
+                    <div class="flex items-center justify-end p-3">
+                        <p class="text-lg text-red-600 font-semibold mr-3">( {{ $payments->cancel_reason }} )</p>
                         <div class="w-48 h-12 flex justify-center items-center bg-red-600 border-2 font-semibold text-lg text-white rounded-lg transition duration-300">
                             Pesanan Dibatalkan
                         </div>
                     </div>
+
+                    @elseif ($payments->status == 'Selesai')
+                    {{-- Pesanan selesai --}}
+                    <div class="flex justify-end p-3">
+                        <div class="w-48 h-12 flex justify-center items-center bg-green-600 border-2 font-semibold text-lg text-white rounded-lg transition duration-300">
+                            Pesanan Selesai
+                        </div>
+                    </div>
                     @endif
                 </div>
-
             </div>
         </div>
 

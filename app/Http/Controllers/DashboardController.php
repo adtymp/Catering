@@ -15,7 +15,7 @@ class DashboardController extends Controller
     {
         $categories = Category::all();
         $banners = Banner::all();
-        $products = Product::with('category')->get();
+        $products = Product::with('category')->withAvg('productRates as average_rating', 'rate')->get();
         $cartCount = Auth::check() ? Cart::where('user_id', Auth::id())->count() : 0;
 
         return view('welcome', compact('categories', 'banners', 'products', 'cartCount'));
@@ -26,7 +26,7 @@ class DashboardController extends Controller
         $categories = Category::all();
         $banners    = Banner::all();
         $cartCount = Auth::check() ? Cart::where('user_id', Auth::id())->count() : 0;
-        $productsQuery = Product::with('category');
+        $productsQuery = Product::with('category')->withAvg('productRates as average_rating', 'rate');
         
 
         if ($request->filled('query')) {

@@ -24,7 +24,7 @@
         <div class="md:col-span-1">
             <div class="w-full border border-gray-200 p-4 rounded-t-xl bg-white text-xs shadow-md">
                 @if ($payments->status == 'permintaan')
-                    <p class="text-sm text-center text-red-600 p-4">Pesanan anda sedang dalam status permintaan pesanan ke admin</p>
+                <p class="text-sm text-center text-red-600 p-4">Pesanan anda sedang dalam status permintaan pesanan ke admin</p>
                 @endif
                 <div class="border-b">
                     <div class="p-2 space-y-4 text-sm">
@@ -45,6 +45,7 @@
                                 <p class="ml-2">{{ $payments->delivery_time->format('H:i') }} WIB</p>
                             </div>
                         </div>
+                        <p class="font-bold text-center">Note : {{ $payments->note}}</p>
                     </div>
                 </div>
                 <div class="flex py-4 items-center text-sm">
@@ -103,27 +104,90 @@
                         <span>Total</span>
                         <span>Rp {{ number_format($payments->total, 0, ',', '.') }}</span>
                     </li>
-                </ul>
-                <div x-data="{ bukti: false }" class="text-center p-4">
-                    <button @click="bukti = true" type="button" class="text-sm text-blue-600">
-                        Lihat Bukti Pembayaran
-                    </button>
+                    <li>
+                        <div x-data="{ bukti: false }" class="text-center p-4">
+                            <button @click="bukti = true" type="button" class="text-sm text-blue-600">
+                                Lihat Bukti Pembayaran
+                            </button>
+                            <div x-show="bukti" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                                <div class="bg-white p-6 overflow-y-auto rounded-lg relative max-w-lg w-full">
+                                    <div class="flex justify-end">
+                                        <button @click="bukti = false" type="button" class="text-gray-500 hover:text-red-500">
+                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                            </svg>
+                                        </button>
+                                    </div>
 
-                    <div x-show="bukti" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                        <div class="bg-white p-6 overflow-y-auto rounded-lg relative max-w-lg w-full">
-                            <div class="flex justify-end">
-                                <button @click="bukti = false" type="button" class="text-gray-500 hover:text-red-500">
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                    </svg>
-                                </button>
+                                    <img src="{{ asset('storage/' . $payments->bukti_pembayaran) }}" alt="Bukti Pembayaran" class="w-full max-h-[500px] object-contain rounded mt-4">
+                                </div>
                             </div>
+                        </div>
+                    </li>
+                    <hr class="border-slate-300" />
+                </ul>
+                <div class="mt-3">
+                    @if ($payments->status == 'Permintaan')
+                    <!-- Tombol untuk membuka modal -->
+                    <div x-data="{ showModal: false }">
+                        <div class="flex justify-end mb-3">
+                            <button @click="showModal = true"
+                                class="w-40 h-12 bg-red-600 hover:bg-white border-2 hover:border-red-500 font-semibold text-lg text-white hover:text-red-500 rounded-lg transition duration-300">
+                                Batalkan
+                            </button>
+                        </div>
 
-                                <img src="{{ asset('storage/' . $payments->bukti_pembayaran) }}" alt="Bukti Pembayaran" class="w-full max-h-[500px] object-contain rounded mt-4">
+                        <!-- Modal -->
+                        <div x-show="showModal"
+                            class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center"
+                            x-transition>
+                            <div class="bg-white rounded-lg shadow-md w-full max-w-md p-6">
+                                <h2 class="text-lg font-semibold mb-4 text-center">Alasan Pembatalan</h2>
+
+                                <form method="POST"
+                                    action="{{ route('detailpesanan.update', ['id' => $payments->id, 'status' => 'Dibatalkan']) }}">
+                                    @csrf
+
+                                    <label class="block mb-2 text-sm font-medium">Pilih Alasan:</label>
+                                    <select name="cancel_reason" required class="w-full border rounded px-3 py-2 mb-4">
+                                        <option value="">-- Pilih Alasan --</option>
+                                        <option value="Ingin merubah produk">Ingin merubah produk</option>
+                                        <option value="Tidak jadi memesan">Tidak jadi memesan</option>
+                                        <option value="Menemukan harga lebih murah">Menemukan harga lebih murah</option>
+                                        <option value="Lainnya">Lainnya</option>
+                                    </select>
+
+                                    <div class="flex justify-between">
+                                        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">Kirim</button>
+                                        <button type="button" @click="showModal = false" class="text-gray-500 hover:text-red-600">Batal</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
+                    @elseif ($payments->status == 'Siap Diantar' || $payments->status == 'Siap Diambil')
+                        @if (!$payments->user_done)
+                        <div class="flex justify-end p-3">
+                            <form action="{{ route('detailpesanan.update', ['id' => $payments->id, 'status' => 'Selesai']) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="w-40 h-12 bg-green-600 hover:bg-white border-2 hover:border-green-500 font-semibold text-lg text-white hover:text-green-500 rounded-lg transition duration-300">
+                                    Diterima (User)
+                                </button>
+                            </form>
+                        </div>
+                        @else
+                        <p class="text-sm text-yellow-500 text-right pr-4">Menunggu konfirmasi admin...</p>
+                        @endif
+                    @elseif ($payments->status == 'Dibatalkan')
+                    {{-- Pesanan sudah dibatalkan --}}
+                    <div class="flex items-center justify-end p-3">
+                        <p class="text-lg text-red-600 font-semibold mr-3">( {{ $payments->cancel_reason }} )</p>
+                        <div class="w-48 h-12 flex justify-center items-center bg-red-600 border-2 font-semibold text-lg text-white rounded-lg transition duration-300">
+                            Pesanan Dibatalkan
+                        </div>
+                    </div>
+                    @endif
                 </div>
-
             </div>
         </div>
 

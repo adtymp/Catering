@@ -13,6 +13,7 @@ use App\Http\Controllers\OngkirController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductRateController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UlasanController;
 use App\Http\Middleware\AdminMiddleware;
@@ -68,9 +69,17 @@ Route::middleware(LoggedIn::class)->group(function () {
 
     Route::get('/cart', [CartController::class, 'index'])->name('cart')->middleware('role:customer');
 
+    Route::post('/cart/{cart}/update-quantity', [CartController::class, 'updateQuantity'])->name('cart.update-quantity');
+
     Route::post('/cart/delete/{id}', [CartController::class, 'deleteCart'])->name('cart.delete')->middleware('role:customer');
 
     Route::get('/detailpesanan/{idPesanan}', [OrderController::class, 'detailPesanan'])->name('detailpesanan')->middleware('role:customer');
+
+    Route::post('/detailpesanan/update/{id}/{status}', [OrderController::class, 'update'])->name('detailpesanan.update')->middleware('role:customer');
+
+    Route::post('/rate-product', [ProductRateController::class, 'addRate'])->name('rateProduct.add')->middleware('role:customer');
+
+    Route::post('/rate-product/dismiss', [ProductRateController::class, 'dismiss'])->name('rateProduct.dismiss')->middleware('role:customer');
 
     Route::post('/ulasan/addUlasan', [UlasanController::class, 'addUlasan'])->name('ulasan.add')->middleware('role:customer');
 });

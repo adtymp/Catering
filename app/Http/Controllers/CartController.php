@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
@@ -27,6 +28,12 @@ class CartController extends Controller
             'slug' => 'required|exists:products,slug',
         ]);
 
+        $product = Product::findOrFail($request->product);
+
+        if ($request->quantity < $product->minPax) {
+            return back()->withErrors(['quantity' => 'Minimal pemesanan produk ini adalah ' . $product->minPax]);
+        }
+
         $cart = new Cart();
         $cart->user_id = $request->user;
         $cart->product_id = $request->product;
@@ -46,14 +53,27 @@ class CartController extends Controller
         });
     }
 
+    public function updateQuantity(Cart $cart, Request $request)
+    {
+        $validated = $request->validate([
+            'quantity' => 'required|integer|min:1'
+        ]);
+
+        $cart->update(['quantity' => $validated['quantity']]);
+
+        return response()->json([
+            'success' => true,
+            'new_price' => $cart->product->price * $cart->quantity
+        ]);
+    }
+
     public function deleteCart($id)
     {
         $cart = Cart::find($id);
         if ($cart) {
             $cart->delete();
         }
-    
+
         return redirect()->route('cart')->with('success', 'Produk berhasil dihapus dari keranjang.');
     }
-    
 }

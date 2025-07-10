@@ -17,6 +17,7 @@ class Payment extends Model
         'delivery_time',
         'shipping_method',
         'idPesanan',
+        'note',
         'bukti_pembayaran',
         'total',
     ];

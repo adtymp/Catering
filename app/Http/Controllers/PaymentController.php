@@ -7,6 +7,7 @@ use App\Models\Cart;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
@@ -56,6 +57,7 @@ class PaymentController extends Controller
                 'delivery_date' => 'required|date|after_or_equal:today',
                 'delivery_time' => 'required|date_format:H:i',
                 'shipping_method' => 'required|string|max:255',
+                'note'      => 'nullable|string',
                 'bukti_pembayaran' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'diskon' => 'required|numeric|min:0',
                 'ongkir' => 'required|numeric|min:0',
@@ -95,6 +97,7 @@ class PaymentController extends Controller
             $payment->delivery_time = $request->delivery_time;
             $payment->shipping_method = $request->shipping_method;
             $payment->bukti_pembayaran = $bukti;
+            $payment->note = $request->note;
             $payment->status = $status;
             $payment->diskon = $request->diskon;
             $payment->ongkir = $request->ongkir;
@@ -103,12 +106,33 @@ class PaymentController extends Controller
             if ($payment->save()) {
                 $cart = array_column($request->products, 'cart_id');
                 Cart::where('user_id', Auth::id())->whereIn('id', $cart)->delete();
-                return redirect()->route('order')->with('success', 'Pembayaran berhasil dibuat.');
+
+                $address = Address::find($request->address_id);
+                $penerima = $address->nama_penerima;
+                $adminPhone = '08815074046';
+
+                $waAdmin = '62' . ltrim($adminPhone, '0');
+
+                $pesan = "Halo Admin, ada pesanan baru!\n\n" .
+                    "ID Pesanan: *{$payment->idPesanan}*\n" .
+                    "Penerima: {$penerima}\n" .
+                    "Total: Rp. " . number_format($payment->total, 0, ',', '.') . "\n" .
+                    "Tanggal Kirim: *" . $payment->delivery_date->format('d M Y') . "*\n" .
+                    "Pukul: *" . $payment->delivery_time->format('H:i') . " WIB*\n\n" .
+                    "Note: *{$payment->note}*\n\n" .
+                    "Mohon segera diproses ya.";
+
+                $pesanEncoded = urlencode($pesan);
+                $whatsappUrl = "https://wa.me/{$waAdmin}?text={$pesanEncoded}";
+
+                return redirect()->route('order')
+                    ->with('success', 'Pembayaran berhasil dibuat.')
+                    ->with('wa_to_admin', $whatsappUrl);
             } else {
                 return back()->withErrors('Gagal membuat pesanan, silakan coba lagi.');
             }
         } catch (\Exception $e) {
-            \Log::error('Payment error: ' . $e->getMessage());
+            Log::error('Payment error: ' . $e->getMessage());
             return back()->withErrors('Terjadi kesalahan saat memproses pembayaran. Silakan coba lagi.');
         }
     }

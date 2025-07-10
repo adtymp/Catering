@@ -82,6 +82,37 @@
             </div>
         </div>
     </div>
+    @if(session('wa_to_admin') || session('wa_to_customer'))
+    <div x-data="{ show: true }" x-show="show" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <div class="text-center">
+                <h3 class="mt-2 text-lg font-medium text-gray-900">Notifikasi Status Dikirim</h3>
+                <div class="mt-4">
+                    <p class="text-sm text-gray-500">
+                        Notifikasi status pesanan akan dikirim via WhatsApp...
+                    </p>
+                </div>
+                <div class="mt-6 flex justify-center space-x-3">
+                    @if(session('wa_to_admin'))
+                    <a href="{{ session('wa_to_admin') }}" target="_blank" class="px-4 py-2 bg-green-600 text-white rounded-md">
+                        Buka WhatsApp Admin
+                    </a>
+                    @endif
+
+                    @if(session('wa_to_customer'))
+                    <a href="{{ session('wa_to_customer') }}" target="_blank" class="px-4 py-2 bg-green-600 text-white rounded-md">
+                        Buka WhatsApp Customer
+                    </a>
+                    @endif
+
+                    <button @click="show = false" class="px-4 py-2 border border-gray-300 rounded-md">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 
 </body>
 

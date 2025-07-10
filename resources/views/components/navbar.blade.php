@@ -127,8 +127,8 @@
             <!-- <a href="#" class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white" aria-current="page">Dashboard</a> -->
             <button class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-white hover:bg-red-800">Menu</button>
             <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-white hover:bg-red-800">Cara Pesan</a>
-            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-white hover:bg-red-800">Ulasan</a>
-            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-white hover:bg-red-800">Tentang Kami</a>
+            <a href="{{ route('ulasan') }}" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-white hover:bg-red-800">Ulasan</a>
+            <a href="{{ route('about') }}" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-white hover:bg-red-800">Tentang Kami</a>
         </div>
         <div class="border-t border-red-700 pb-3 pt-4">
             <div class="flex items-center px-5 justify-between">
@@ -142,10 +142,10 @@
                 </div>
                 <a href="{{ route('cart') }}" class="relative p-1 mr-2">
                     <svg xmlns="http://www.w3.org/2000/svg" height="25" width="25" viewBox="0 0 576 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
-                        <path fill="#fff000" d="M0 24C0 10.7 10.7 0 24 0L69.5 0c22 0 41.5 12.8 50.6 32l411 0c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3l-288.5 0 5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5L488 336c13.3 0 24 10.7 24 24s-10.7 24-24 24l-288.3 0c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5L24 48C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
+                        <path fill="#000000" d="M0 24C0 10.7 10.7 0 24 0L69.5 0c22 0 41.5 12.8 50.6 32l411 0c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3l-288.5 0 5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5L488 336c13.3 0 24 10.7 24 24s-10.7 24-24 24l-288.3 0c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5L24 48C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
                     </svg>
                     @if($cartCount > 0)
-                    <span class="absolute -top-1 -right-1 bg-white text-red-800 text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    <span class="absolute -top-1 -right-1 bg-red-800 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                         {{ $cartCount }}
                     </span>
                     @endif
@@ -161,7 +161,7 @@
                     <button type="submit" class="block px-4 py-2 text-sm  text-black hover:bg-red-700 hover:text-white w-full text-left" role="menuitem" tabindex="-1">Sign out</button>
                 </form>
                 @else
-                <a href="#" class="block px-4 py-2 text-sm text-black hover:bg-red-700 hover:text-white" role="menuitem" tabindex="-1">Login</a>
+                <a href="{{ route('login') }}" class="block px-4 py-2 text-sm text-black hover:bg-red-700 hover:text-white" role="menuitem" tabindex="-1">Login</a>
                 @endauth
             </div>
         </div>

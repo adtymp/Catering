@@ -65,6 +65,10 @@
                     <input type="number" name="price" id="price" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
                 </div>
                 <div>
+                    <label class="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-300 text-left">Minimal Pembelian</label>
+                    <input type="number" name="minPax" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
+                </div>
+                <div>
                     <label class="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-300 text-left">Deskripsi</label>
                     <div class="mt-2">
                         <textarea name="deskripsi" rows="3" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"></textarea>
