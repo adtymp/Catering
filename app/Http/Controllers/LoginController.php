@@ -58,7 +58,11 @@ class LoginController extends Controller
         $user->password = bcrypt($request->password);
         if ($user->save()) {
             $user->assignRole('customer');
-            return redirect()->route('login');
+
+            Auth::login($user);
+            Session::put('loginStatus', true);
+            
+            return redirect()->route('welcome')->with('success', 'Anda berhasil mendaftarkan akun');
         } else {
             return back()->withErrors('Gagal menyimpan User');
         }

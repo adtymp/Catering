@@ -25,66 +25,42 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
                     </svg>
                 </button>
-                <div x-show="openSettings" @click.away="openSettings = false" class="bg-white absolute right-0 w-40 py-2 mt-1 border border-gray-200 shadow-2xl" style="display: none;">
+                <div x-show="openSettings" @click.away="openSettings = false" class="bg-white absolute right-0 w-52 py-2 mt-1 border border-gray-200 shadow-2xl" style="display: none;">
                     <div class="py-2 border-b">
-                        <p class="text-gray-400 text-xs px-6 uppercase mb-1">Settings</p>
-                        <button class="w-full flex items-center px-6 py-1.5 space-x-2 hover:bg-gray-200">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
-                            </svg>
-                            <span class="text-sm text-gray-700">Share Profile</span>
-                        </button>
-                        <button class="w-full flex items-center py-1.5 px-6 space-x-2 hover:bg-gray-200">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
-                            </svg>
-                            <span class="text-sm text-gray-700">Block User</span>
-                        </button>
-                        <button class="w-full flex items-center py-1.5 px-6 space-x-2 hover:bg-gray-200">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            <span class="text-sm text-gray-700">More Info</span>
-                        </button>
-                    </div>
-                    <div class="py-2">
-                        <p class="text-gray-400 text-xs px-6 uppercase mb-1">Feedback</p>
-                        <button class="w-full flex items-center py-1.5 px-6 space-x-2 hover:bg-gray-200">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                            </svg>
-                            <span class="text-sm text-gray-700">Report</span>
-                        </button>
+                        <p class="text-gray-400 text-xs px-6 uppercase mb-1">Pengaturan</p>
+                        <div x-data="{ changePassword : false }">
+                            <button @click="changePassword = true" class="w-full flex items-center px-6 py-1.5 space-x-2 hover:bg-gray-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+                                    <path d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160L0 416c0 53 43 96 96 96l256 0c53 0 96-43 96-96l0-96c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 96c0 17.7-14.3 32-32 32L96 448c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l96 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 64z" />
+                                </svg>
+                                <span class="text-sm text-gray-700">Ganti Password</span>
+                            </button>
+                            <x-user.edit></x-user.edit>
+                        </div>
+                        <div x-data="{ deleteAccount : false }">
+                            <button @click="deleteAccount=true" class="w-full flex items-center py-1.5 px-6 space-x-2 hover:bg-gray-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="#fe0606" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+                                    <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24l0 112c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-112c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z" />
+                                </svg>
+                                <span class="text-sm text-gray-700">Hapus Akun</span>
+                            </button>
+                            <x-user.delete></x-user.delete>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="w-full h-[250px] rounded-tl-lg rounded-tr-lg">
+            <div class="w-full h-[100px] rounded-tl-lg rounded-tr-lg">
             </div>
             @auth
-            <div class="flex flex-col items-center -mt-20">
-                <img src="https://vojislavd.com/ta-template-demo/assets/img/profile.jpg" class="w-40 border-4 border-white rounded-full">
+            <div class="flex flex-col items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-28 h-28" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+                    <path d="M399 384.2C376.9 345.8 335.4 320 288 320l-64 0c-47.4 0-88.9 25.8-111 64.2c35.2 39.2 86.2 63.8 143 63.8s107.8-24.7 143-63.8zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256 16a72 72 0 1 0 0-144 72 72 0 1 0 0 144z" />
+                </svg>
                 <div class="flex items-center space-x-2 mt-2">
                     <p class="text-2xl">{{ Auth::user()->name }}</p>
                 </div>
-                @endauth
-                <div class="flex-1 flex flex-col items-center lg:items-end justify-end px-8 mt-2">
-                    <div class="flex items-center space-x-4 mt-2">
-                        <button class="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"></path>
-                            </svg>
-                            <span>Connect</span>
-                        </button>
-                        <button class="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd"></path>
-                            </svg>
-                            <span>Message</span>
-                        </button>
-                    </div>
-                </div>
             </div>
-
+            @endauth
             <div class="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4">
                 <div class="w-full flex flex-col 2xl:w-1/3">
                     <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
@@ -92,15 +68,11 @@
                         @auth
                         <ul class="mt-2 text-gray-700">
                             <li class="flex border-y py-2">
-                                <span class="font-bold w-24">Full name:</span>
+                                <span class="font-bold w-24">Nama:</span>
                                 <span class="text-gray-700">{{ Auth::user()->name }}</span>
                             </li>
                             <li class="flex border-b py-2">
-                                <span class="font-bold w-24">Birthday:</span>
-                                <span class="text-gray-700">24 Jul, 1991</span>
-                            </li>
-                            <li class="flex border-b py-2">
-                                <span class="font-bold w-24">Joined:</span>
+                                <span class="font-bold w-24">Terdaftar:</span>
                                 <span class="text-gray-700">{{ Auth::user()->created_at->format('d M Y') }}</span>
                             </li>
                             <li class="flex border-b py-2">

@@ -15,6 +15,6 @@ class CaraPesanContoller extends Controller
         $cartCount = Auth::check() ? Cart::where('user_id', Auth::id())->count() : 0;
 
 
-        return view('ulasan',compact('categories', 'cartCount' ));
+        return view('carapesan',compact('categories', 'cartCount' ));
     }
 }

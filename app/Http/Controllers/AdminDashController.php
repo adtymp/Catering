@@ -6,6 +6,7 @@ use App\Models\Payment;
 use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AdminDashController extends Controller
 {
@@ -13,43 +14,70 @@ class AdminDashController extends Controller
     {
         $product = Product::count();
         $payments = Payment::all();
-        $totalSales = Payment::where('status', 'Selesai')->sum('total');
+        $selectedMonth = request('month', 'all');
+        $query = Payment::where('status', 'Selesai');
+        $totalTransactions = Payment::where('status', 'Selesai')->count();
+        $totalCustomers = Payment::where('status', 'Selesai')->distinct('user_id')->count('user_id');
+        $topCustomers = Payment::where('status', 'Selesai')
+            ->select('user_id', DB::raw('COUNT(*) as total_transactions'))
+            ->groupBy('user_id')
+            ->having('total_transactions', '>=', 2)
+            ->orderByDesc('total_transactions')
+            ->with('user')
+            ->limit(5)
+            ->get();
+
+        if ($selectedMonth !== 'all') {
+            try {
+                $carbonMonth = Carbon::parse($selectedMonth . '-01');
+                $query->whereYear('created_at', $carbonMonth->year)
+                    ->whereMonth('created_at', $carbonMonth->month);
+            } catch (\Exception $e) {
+            }
+        }
+
+        $totalSales = $query->sum('total');
+
+        $months = Payment::where('status', 'Selesai')
+            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as bulan")
+            ->groupBy('bulan')
+            ->orderBy('bulan', 'desc')
+            ->pluck('bulan');
+
         $allPayments = Payment::where('status', 'Selesai')->get();
         $productQuantities = collect();
 
         foreach ($allPayments as $payment) {
             $products = json_decode($payment->products, true);
 
-            // Pastikan $products adalah array dan bukan null
             if (is_array($products)) {
+                $productIds = [];
+
                 foreach ($products as $item) {
-                    // Jika $item adalah 1 produk langsung
-                    if (isset($item['id']) && isset($item['qty'])) {
-                        $productId = $item['id'];
-                        $qty = (int) $item['qty'];
-                    }
-                    // Jika $item adalah array yang berisi beberapa produk (nested)
-                    elseif (is_array($item) && isset($item[0]['id'])) {
+                    if (isset($item['id'])) {
+                        $productIds[] = $item['id'];
+                    } elseif (is_array($item) && isset($item[0]['id'])) {
                         foreach ($item as $prod) {
-                            $productId = $prod['id'];
-                            $qty = (int) $prod['qty'];
-
-                            $productQuantities[$productId] = ($productQuantities[$productId] ?? 0) + $qty;
+                            if (isset($prod['id'])) {
+                                $productIds[] = $prod['id'];
+                            }
                         }
-                        continue; // lanjut ke payment berikutnya
-                    } else {
-                        continue; // skip jika formatnya tidak sesuai
                     }
+                }
 
-                    // Tambahkan ke koleksi
-                    $productQuantities[$productId] = ($productQuantities[$productId] ?? 0) + $qty;
+                foreach (array_unique($productIds) as $productId) {
+                    $productQuantities[$productId] = ($productQuantities[$productId] ?? 0) + 1;
                 }
             }
         }
 
+
         $productNames = Product::whereIn('id', $productQuantities->keys())->pluck('name', 'id');
 
-        // Data penjualan per waktu
+        $topProducts = $productQuantities->mapWithKeys(function ($qty, $id) use ($productNames) {
+            return [$productNames[$id] ?? 'Produk ID ' . $id => $qty];
+        })->sortDesc();
+
         $dailySales = Payment::where('status', 'Selesai')
             ->whereDate('created_at', '>=', Carbon::now()->subDays(7))
             ->selectRaw('DATE(created_at) as date, SUM(total) as total')
@@ -70,7 +98,6 @@ class AdminDashController extends Controller
         $monthlyLabels = $monthlySales->pluck('month')->map(function ($m) {
             return Carbon::create()->month($m)->translatedFormat('F');
         })->toArray();
-
         $monthlyTotals = $monthlySales->pluck('total')->toArray();
 
         $yearlySales = Payment::where('status', 'Selesai')
@@ -78,12 +105,9 @@ class AdminDashController extends Controller
             ->groupBy('year')
             ->orderBy('year')
             ->get();
+
         $yearlyLabels = $yearlySales->pluck('year')->toArray();
         $yearlyTotals = $yearlySales->pluck('total')->toArray();
-
-        $topProducts = $productQuantities->mapWithKeys(function ($qty, $id) use ($productNames) {
-            return [$productNames[$id] ?? 'Produk ID ' . $id => $qty];
-        })->sortDesc();
 
         return view('admindashboard', compact(
             'product',
@@ -98,7 +122,12 @@ class AdminDashController extends Controller
             'yearlySales',
             'yearlyLabels',
             'yearlyTotals',
-            'payments'
+            'payments',
+            'months',
+            'selectedMonth',
+            'totalTransactions',
+            'totalCustomers',
+            'topCustomers'
         ));
     }
 }

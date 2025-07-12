@@ -5,6 +5,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminDashController;
 use App\Http\Controllers\BannerController;
+use App\Http\Controllers\CaraPesanContoller;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
@@ -42,14 +43,18 @@ Route::get('/about', [AboutContoller::class, 'index'])->name('about');
 
 Route::get('/ulasan', [UlasanController::class, 'index'])->name('ulasan');
 
-// Route::get('/carapesan', [UlasanController::class, 'index1'])->name('carapesan');
+Route::get('/carapesan', [CaraPesanContoller::class, 'index'])->name('carapesan');
 
 //Login With Google
 
 
 Route::middleware(LoggedIn::class)->group(function () {
 
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile')->middleware(['role:customer']);
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile')->middleware('role:customer');
+
+    Route::post('/profile/updatePassword', [ProfileController::class, 'updatePassword'])->name('profile.update')->middleware('role:customer');
+    
+    Route::post('/profile/deletePassword', [ProfileController::class, 'deleteAccount'])->name('profile.delete')->middleware('role:customer');
 
     Route::get('/address', [AddressController::class, 'index'])->name('address')->middleware('role:customer');
 

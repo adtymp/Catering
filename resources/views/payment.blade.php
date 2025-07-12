@@ -139,13 +139,13 @@
                     </div>
                 </div>
                 <!-- Kode Promo -->
-                <div class="mt-12 max-w-md">
+                <!-- <div class="mt-12 max-w-md">
                     <label class="block mb-2">Punya kode promo?</label>
                     <div class="flex gap-4">
                         <input type="text" name="diskon" placeholder="Promo code" class="px-4 py-2.5 border border-gray-400 w-full text-sm rounded-md focus:outline-blue-600" />
                         <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-md text-sm">Terapkan</button>
                     </div>
-                </div>
+                </div> -->
                 <div class="mb-4">
                     <label class="text-sm font-medium block mb-4 mt-4">Catatan</label>
                     <textarea name="note" placeholder="Bungkus plastik saja" class="px-4 py-2.5 border border-gray-400 w-full text-sm rounded-md focus:outline-blue-600"></textarea>
@@ -178,9 +178,9 @@
                     <li class="flex justify-between">Subtotal
                         <span class="font-semibold text-slate-900" id="subtotal" x-text="formatRupiah(subtotal)">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                     </li>
-                    <li class="flex justify-between">Diskon
+                    <!-- <li class="flex justify-between">Diskon
                         <span class="font-semibold text-slate-900" id="diskon" x-text="formatRupiah(diskon)">Rp. 0</span>
-                    </li>
+                    </li> -->
                     <li class="flex justify-between">Ongkos Kirim
                         <span class="font-semibold text-slate-900" id="ongkir" x-text="formatRupiah(ongkir)"></span>
                     </li>
@@ -209,7 +209,7 @@
                             </button>
                         </div>
                         <h2 class="text-center mb-4">Kirim ke Rekening : </h2>
-                        <h1 class="font-bold text-xl text-center mb-4">46575453465</h1>
+                        <h1 class="font-bold text-xl text-center mb-4">BCA 46575453465 (a.n admin)</h1>
                         <label>Upload</label>
                         <div class="border-2 p-4">
                             <input type="file" name="bukti_pembayaran" accept="image/*" required>

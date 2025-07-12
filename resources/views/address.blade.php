@@ -72,7 +72,6 @@
             </button>
         </a>
         <h1 class="font-bold text-3xl">Tambah Alamat</h1>
-        <h1 class="font-bold text-3xl">LOGO</h1>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-y-12 gap-x-8 p-6">
         <div class="col-span-1 md:col-span-2">
@@ -94,11 +93,44 @@
                         <label class="text-sm font-medium block mb-2">No. Telepon <span class="text-gray-600">(Gunakan nomor yang terdaftar ke whatssapp)</span></label>
                         <input type="text" name="no_hp" placeholder="Masukkan No.Telepon" class="px-4 py-2.5 border border-gray-400 w-full text-sm rounded-md focus:outline-blue-600" />
                     </div>
-                    <div>
-                        <label class="text-sm font-medium block mb-2">Kecamatan</label>
-                        <input type="text" name="kecamatan" placeholder="Masukkan Kecamatan" class="px-4 py-2.5 border border-gray-400 w-full text-sm rounded-md focus:outline-blue-600" />
-                    </div>
                     <div x-data="alamatMap()" x-init="init()" class="space-y-4 relative mb-4">
+                        <div>
+                            <label class="text-sm font-medium block mb-2">Kecamatan</label>
+                            <select name="kecamatan" x-model="selectedKecamatan" @change="updateMapByKecamatan()" class="px-4 py-2.5 border border-gray-400 w-full text-sm rounded-md focus:outline-blue-600">
+                                <option value="">Pilih Kecamatan</option>
+                                <option value="Asemrowo">Asemrowo</option>
+                                <option value="Benowo">Benowo</option>
+                                <option value="Bubutan">Bubutan</option>
+                                <option value="Bulak">Bulak</option>
+                                <option value="Dukuh Pakis">Dukuh Pakis</option>
+                                <option value="Gayungan">Gayungan</option>
+                                <option value="Genteng">Genteng</option>
+                                <option value="Gubeng">Gubeng</option>
+                                <option value="Gununganyar">Gununganyar</option>
+                                <option value="Jambangan">Jambangan</option>
+                                <option value="Karangpilang">Karangpilang</option>
+                                <option value="Kenjeran">Kenjeran</option>
+                                <option value="Krembangan">Krembangan</option>
+                                <option value="Lakarsantri">Lakarsantri</option>
+                                <option value="Mulyorejo">Mulyorejo</option>
+                                <option value="Pabean Cantian">Pabean Cantian</option>
+                                <option value="Pakal">Pakal</option>
+                                <option value="Rungkut">Rungkut</option>
+                                <option value="Sambikerep">Sambikerep</option>
+                                <option value="Sawahan">Sawahan</option>
+                                <option value="Semampir">Semampir</option>
+                                <option value="Simokerto">Simokerto</option>
+                                <option value="Sukolilo">Sukolilo</option>
+                                <option value="Sukomanunggal">Sukomanunggal</option>
+                                <option value="Tambaksari">Tambaksari</option>
+                                <option value="Tandes">Tandes</option>
+                                <option value="Tegalsari">Tegalsari</option>
+                                <option value="Tenggilis Mejoyo">Tenggilis Mejoyo</option>
+                                <option value="Wiyung">Wiyung</option>
+                                <option value="Wonocolo">Wonocolo</option>
+                                <option value="Wonokromo">Wonokromo</option>
+                            </select>
+                        </div>
                         <div class="relative">
                             <label class="text-sm font-medium block mb-2">Alamat</label>
                             <!-- @focus="showSuggestions = true"
@@ -124,7 +156,7 @@
                             </ul>
                         </div>
                         <!-- Map -->
-                        <div id="map" class="h-64 w-full rounded border relative z-0"></div>
+                        <div id="map" class="h-96 w-full rounded-lg border-2 border-gray-300 relative z-0"></div>
 
                         <input type="hidden" name="latitude" :value="lat">
                         <input type="hidden" name="longitude" :value="lng">
@@ -157,33 +189,79 @@
         const LOCATIONIQ_API_KEY = "{{ env('LOCATIONIQ_API_KEY') }}";
 
         function alamatMap() {
+            const KECAMATAN_COORDINATES = {
+                'Asemrowo': [-7.235925543343521, 112.68589465025899],
+                'Benowo': [-7.2156, 112.6419],
+                'Bubutan': [-7.2478, 112.7308],
+                'Bulak': [-7.2319, 112.7808],
+                'Dukuh Pakis': [-7.2917, 112.6917],
+                'Gayungan': [-7.330864205769391, 112.72283811025984],
+                'Genteng': [-7.259251510521706, 112.74479267400811],
+                'Gubeng': [-7.279206000604377, 112.7545807955722],
+                'Gununganyar': [-7.340119219882331, 112.80306363590269],
+                'Jambangan': [-7.3333, 112.7167],
+                'Karangpilang': [-7.336436581075043, 112.69135022702608],
+                'Kenjeran': [-7.2450, 112.7969],
+                'Krembangan': [-7.2333, 112.7333],
+                'Lakarsantri': [-7.2817, 112.6514],
+                'Mulyorejo': [-7.2667, 112.7833],
+                'Pabean Cantian': [-7.2333, 112.7333],
+                'Pakal': [-7.2167, 112.6667],
+                'Rungkut': [-7.3167, 112.7833],
+                'Sambikerep': [-7.2833, 112.6667],
+                'Sawahan': [-7.2667, 112.7167],
+                'Semampir': [-7.2333, 112.7500],
+                'Simokerto': [-7.2500, 112.7500],
+                'Sukolilo': [-7.2917, 112.7917],
+                'Sukomanunggal': [-7.2663948702955565, 112.70352134198377],
+                'Tambaksari': [-7.2667, 112.7667],
+                'Tandes': [-7.2333, 112.7000],
+                'Tegalsari': [-7.2667, 112.7500],
+                'Tenggilis Mejoyo': [-7.3000, 112.7667],
+                'Wiyung': [-7.3167, 112.7000],
+                'Wonocolo': [-7.3167, 112.7333],
+                'Wonokromo': [-7.3000, 112.7333]
+            };
+
             return {
                 map: null,
                 marker: null,
                 lat: null,
                 lng: null,
                 address: '',
+                selectedKecamatan: '',
 
                 init() {
                     if (navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition(position => {
-                            this.lat = position.coords.latitude;
-                            this.lng = position.coords.longitude;
-
-                            this.initMap();
-                            this.updateMarker(this.lat, this.lng);
-                            this.reverseGeocode(this.lat, this.lng);
-                        }, () => {
-                            this.lat = -6.200000;
-                            this.lng = 106.816666;
-                            this.initMap();
-                            this.updateMarker(this.lat, this.lng);
-                        });
+                        navigator.geolocation.getCurrentPosition(
+                            position => {
+                                this.lat = position.coords.latitude;
+                                this.lng = position.coords.longitude;
+                                this.initMap();
+                                this.updateMarker(this.lat, this.lng);
+                                this.reverseGeocode(this.lat, this.lng);
+                            },
+                            error => {
+                                // Jika gagal ambil lokasi, pakai default Surabaya
+                                console.warn("Lokasi pengguna tidak bisa diambil, menggunakan lokasi default.");
+                                this.lat = -7.2756;
+                                this.lng = 112.7579;
+                                this.initMap();
+                                this.updateMarker(this.lat, this.lng);
+                            }
+                        );
+                    } else {
+                        // Browser tidak support geolocation
+                        console.warn("Geolocation tidak didukung browser ini.");
+                        this.lat = -7.2756;
+                        this.lng = 112.7579;
+                        this.initMap();
+                        this.updateMarker(this.lat, this.lng);
                     }
                 },
 
                 initMap() {
-                    this.map = L.map('map').setView([this.lat, this.lng], 15);
+                    this.map = L.map('map').setView([this.lat, this.lng], 13);
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         attribution: '&copy; OpenStreetMap contributors'
                     }).addTo(this.map);
@@ -211,7 +289,7 @@
                             this.reverseGeocode(this.lat, this.lng);
                         });
                     }
-                    this.map.setView([lat, lng], 15);
+                    this.map.setView([lat, lng], 14);
                 },
 
                 async reverseGeocode(lat, lng) {
@@ -240,8 +318,18 @@
                     } catch (e) {
                         console.error("Search address error", e);
                     }
+                },
+
+                updateMapByKecamatan() {
+                    if (this.selectedKecamatan && KECAMATAN_COORDINATES[this.selectedKecamatan]) {
+                        const [lat, lng] = KECAMATAN_COORDINATES[this.selectedKecamatan];
+                        this.lat = lat;
+                        this.lng = lng;
+                        this.updateMarker(this.lat, this.lng);
+                        this.reverseGeocode(this.lat, this.lng);
+                    }
                 }
-            }
+            };
         }
     </script>
 </body>

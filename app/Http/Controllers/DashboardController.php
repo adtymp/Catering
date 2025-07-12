@@ -54,7 +54,7 @@ class DashboardController extends Controller
     }
     function detailProduct($slug){
         $categories = Category::all();
-        $product = product::where('slug', $slug)->firstOrFail();
+        $product = product::withAvg('productRates as average_rating', 'rate')->where('slug', $slug)->firstOrFail();
         $cartCount = Auth::check() ? Cart::where('user_id', Auth::id())->count() : 0;
 
         return view('detailproduct', compact('categories', 'product', 'cartCount'));

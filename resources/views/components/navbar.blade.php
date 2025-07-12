@@ -1,11 +1,11 @@
 @props(['categories', 'cartCount'])
 <div class="bg-white" x-data="{ isOpen: false }">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2">
-        <div class="flex h-16 items-center justify-between">
+        <div class="flex h-24 items-center justify-between">
             <div class="flex items-center justify-between w-full">
                 <div class="shrink-0">
                     <a href="/" class="rounded-md px-3 py-2 text-sm font-medium text-white flex">
-                        <img src="{{ asset('logo/icon.png') }}" alt="logo" class="w-40 h-40">
+                        <img src="{{ asset('logo/icon.png') }}" alt="logo" class="w-48 h-48">
                     </a>
                 </div>
                 <div class="hidden md:block">
@@ -13,7 +13,7 @@
                         <div x-data="{ menuOpen: false }" class="relative">
                             <button
                                 @click="menuOpen = !menuOpen"
-                                class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-red-800 hover:bg-yellow-300">
+                                class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-white hover:bg-red-800">
                                 Menu
                             </button>
 
@@ -37,9 +37,9 @@
 
 
                         <!-- Menu lainnya -->
-                        <a href="" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-red-800 hover:bg-yellow-300">Cara Pesan</a>
-                        <a href="{{ route('ulasan') }}" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-red-800 hover:bg-yellow-300">Ulasan</a>
-                        <a href="{{ route('about') }}" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-red-800 hover:bg-yellow-300">Tentang Kami</a>
+                        <a href="{{ route('carapesan') }}" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-white hover:bg-red-800">Cara Pesan</a>
+                        <a href="{{ route('ulasan') }}" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-white hover:bg-red-800">Ulasan</a>
+                        <a href="{{ route('about') }}" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-white hover:bg-red-800">Tentang Kami</a>
                     </div>
                 </div>
             </div>
@@ -125,8 +125,31 @@
         <div class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
             <!-- Current: "bg-gray-900 text-white", Default: "text-white hover:bg-gray-700 hover:text-white" -->
             <!-- <a href="#" class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white" aria-current="page">Dashboard</a> -->
-            <button class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-white hover:bg-red-800">Menu</button>
-            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-white hover:bg-red-800">Cara Pesan</a>
+            <div x-data="{ menuOpen: false }" class="relative">
+                <button
+                    @click="menuOpen = !menuOpen"
+                    class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-white hover:bg-red-800">
+                    Menu
+                </button>
+
+                <div
+                    x-show="menuOpen"
+                    @click.away="menuOpen = false"
+                    x-transition
+                    class="absolute z-10 mt-2 w-56 bg-white rounded-md shadow-lg ring-1 ring-black/5">
+                    <ul class="py-2">
+                        @foreach($categories as $category)
+                        <li class="flex items-center px-4 py-2 hover:bg-amber-100">
+                            <a href="{{ route('products.category', ['name' => $category->name]) }}" class="flex items-center">
+                                <img src="{{ asset('storage/' . $category->icon) }}" alt="{{ $category->name }}" class="w-6 h-6 object-cover mr-2 rounded">
+                                <span class="text-gray-800 text-sm">{{ $category->name }}</span>
+                            </a>
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+            <a href="{{ route('carapesan') }}" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-white hover:bg-red-800">Cara Pesan</a>
             <a href="{{ route('ulasan') }}" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-white hover:bg-red-800">Ulasan</a>
             <a href="{{ route('about') }}" class="rounded-md px-3 py-2 text-sm font-medium text-black hover:text-white hover:bg-red-800">Tentang Kami</a>
         </div>
